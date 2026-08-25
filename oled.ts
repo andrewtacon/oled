@@ -262,7 +262,8 @@ namespace OLED {
     //% blockId="OLED_FILL" block="Fill screen"
     //% weight=30 blockGap=8
     export function fill(value: number) {
-        if (value!==0) {value =1 }
+        if (value < 0) { value = 0 }
+        else if (value>255) {value = 255}
         _cx = _cy = 0
         _screen.fill(value)
         _screen[0] = 0x40
