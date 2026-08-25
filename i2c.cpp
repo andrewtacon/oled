@@ -3,9 +3,9 @@
 namespace OLED {
 
     //% block="I2C frequency %frequency Hz"
-    void setI2CSpeed(int speed)
+    void setI2CSpeed()
     {
-        uBit.i2c.setFrequency(speed);
+        uBit.i2c.setFrequency(400000);
     }
 
 }
