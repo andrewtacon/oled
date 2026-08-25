@@ -8,6 +8,7 @@
         "microphone": "*"
     },
     "files": [
+        "shims.d.ts",
         "README.md",
         "main.blocks",
         "main.ts",
