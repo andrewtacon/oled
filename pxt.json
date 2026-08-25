@@ -1,6 +1,6 @@
 {
     "name": "oled",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "",
     "dependencies": {
         "core": "*",
@@ -22,7 +22,7 @@
         "microbit-v2"
     ],
     "preferredEditor": "blocksprj",
-      "disablesVariants": [
+    "disablesVariants": [
         "mbdal"
     ]
 }
