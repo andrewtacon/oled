@@ -19,7 +19,10 @@
     ],
     "public": true,
     "supportedTargets": [
-        "microbit"
+        "microbit-v2"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "blocksprj",
+      "disablesVariants": [
+        "mbdal"
+    ]
 }
