@@ -10,7 +10,9 @@
     "files": [
         "README.md",
         "main.blocks",
-        "main.ts"
+        "main.ts",
+        "oled.ts",
+        "i2c.cpp"
     ],
     "testFiles": [
         "test.ts"
