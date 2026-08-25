@@ -257,13 +257,14 @@ namespace OLED {
     }
 
     /**
-     * clear screen
+     * fill screen
      */
-    //% blockId="OLED_CLEAR" block="Clear screen"
+    //% blockId="OLED_FILL" block="Fill screen"
     //% weight=30 blockGap=8
-    export function clear() {
+    export function fill(value: number) {
+        if (value!==0) {value =1 }
         _cx = _cy = 0
-        _screen.fill(0)
+        _screen.fill(value)
         _screen[0] = 0x40
         draw(1)
     }
