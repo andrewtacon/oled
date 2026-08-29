@@ -186,11 +186,11 @@ namespace OLED {
     export function String(s: string, col: number, row: number, color: number = 1) {
         //error is somewhere that is causing ghosting of letters when print 
         //the, using pixels
-        if (orientation === VERTICAL) {
-            let t = row
-            row = col
-            col = t
-        }
+        // if (orientation === VERTICAL) {
+        //     let t = row
+        //     row = col
+        //     col = t
+        // }
 
         for (let n = 0; n < s.length; n++) {
             char(s.charAt(n), col, row, color)
