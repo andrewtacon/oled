@@ -77,7 +77,7 @@ namespace OLED {
             if (orientation === VERTICAL) {
                 //need to switch to horizontal to match buffer setup)
                 cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
-                cmd1(0xc8)       // SSD1306_COMSCANDEC
+                // cmd1(0xc8)       // SSD1306_COMSCANDEC
             }
 
             set_pos()
@@ -86,7 +86,7 @@ namespace OLED {
             if (orientation === VERTICAL) {
                 //need to switch to horizontal to match buffer setup)
                 cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
-                cmd1(0xc0)       // SSD1306_COMSCANDEC
+                // cmd1(0xc0)       // SSD1306_COMSCANDEC
             }
 
         }
