@@ -77,7 +77,7 @@ namespace OLED {
             if (orientation === VERTICAL) {
                 //need to switch to horizontal to match buffer setup)
                 cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
-                cmd1(0xc8)       // SSD1306_COMSCANDEC
+                // cmd1(0xc8)       // SSD1306_COMSCANDEC
             }
 
             set_pos()
@@ -86,7 +86,7 @@ namespace OLED {
             if (orientation === VERTICAL) {
                 //need to switch to horizontal to match buffer setup)
                 cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
-                cmd1(0xc0)       // SSD1306_COMSCANDEC
+                // cmd1(0xc0)       // SSD1306_COMSCANDEC
             }
 
         }
@@ -127,8 +127,6 @@ namespace OLED {
     function char(c: string, col: number, row: number, color: number = 1) {
         let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
 
-        let oldDraw = _DRAW
-        _DRAW = 0
         // Loop through the 5 columns of the 5x7 font
         for (let i = 0; i < 5; i++) {
             let fontByte = Font_5x7[p + i]
@@ -152,8 +150,6 @@ namespace OLED {
 
         }
 
-        _DRAW = oldDraw
-        draw(_DRAW)
     }
 
 
@@ -168,12 +164,17 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=80 blockGap=8 inlineInputMode=inline
     export function String(s: string, x: number, y: number, color: number = 1) {
+        let oldDraw = _DRAW
+        _DRAW = 0
 
         for (let n = 0; n < s.length; n++) {
             char(s.charAt(n), x, y, color)
             x += 6
             if (x > (MAX_X - 6)) break
         }
+
+        _DRAW = oldDraw
+        draw(_DRAW)
 
     }
 
