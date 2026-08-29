@@ -230,9 +230,9 @@ namespace OLED {
     //% len.max=128 len.min=1 len.defl=16
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
-    export function hline(x: number, y: number, len: number, color: number = 1) {
-        if (orientation === VERTICAL) {
-            vline(x, y, len, color)
+    export function hline(x: number, y: number, len: number, color: number = 1, skipCheck:boolean =  false) {
+        if (orientation === VERTICAL && !skipCheck) {
+            vline(x, y, len, color, true)
             return
         }
         let _sav = _DRAW
@@ -254,9 +254,9 @@ namespace OLED {
     //% len.max=128 len.min=1 len.defl=16
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
-    export function vline(x: number, y: number, len: number, color: number = 1) {
-        if (orientation === HORIZONTAL) {
-            hline(x, y, len, color)
+    export function vline(x: number, y: number, len: number, color: number = 1, skipCheck:boolean =  false) {
+        if (orientation === VERTICAL && !skipCheck) {
+            hline(x, y, len, color, true)
             return
         }
       
