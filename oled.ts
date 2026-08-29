@@ -173,9 +173,9 @@ namespace OLED {
             if (x > (MAX_X - 6)) break
         }
 
-        if (orientation === VERTICAL) {
-            draw(1)
-        }
+        // if (orientation === VERTICAL) {
+        //     draw(1)
+        // }
 
     }
 
