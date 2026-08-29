@@ -405,14 +405,36 @@ namespace OLED {
         orientation = EAST
         cmd1(0xc8)       // SSD1306_COMSCANDEC
         cmd1(0xA0)
-        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+        cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
         MAX_X = 127
         MAX_Y = 63
 
         fill(0)
     }
 
+let flippedVertical = false
+    /**
+     * Flip screen vertically
+     */
+    //% blockId="OLED_flip_vertical" block="OLED Flip Vertical Direction"
+    //% weight=10 blockGap=8
+    export function flipVertical() {
+        flippedVertical ? cmd1(0xC8) : cmd1(0xC0)
+        flippedVertical = !flippedVertical
+        draw(1)
+    }
 
+    let flippedHorizontal = false
+    /**
+     * Flip screen horizontally
+     */
+    //% blockId="OLED_flip_horizontal" block="OLED Flip Horizonatal Direction"
+    //% weight=10 blockGap=8
+    export function flipHorizontal() {
+        flippedHorizontal ? cmd1(0xA0) : cmd1(0xA1)
+        flippedHorizontal = !flippedHorizontal
+        draw(1)
+    }
 
     init();
 }  
