@@ -88,6 +88,12 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=65 blockGap=8
     export function pixel(x: number, y: number, color: number = 1) {
+        //prevent out of bounds writing
+        if (x > MAX_X) { return }
+        if (y > MAX_Y) { return }
+        if (x < 0) { return }
+        if (y < 0) { return }
+
         let page = y >> 3
         let shift_page = y % 8
         let ind = 0
@@ -224,7 +230,7 @@ namespace OLED {
         for (let n = 0; n < s.length; n++) {
             char(s.charAt(n), _cx, _cy, color)
             _cx += 6
-            if (_cx > MAX_X-6) {
+            if (_cx > MAX_X - 6) {
                 scroll()
             }
         }
@@ -388,8 +394,8 @@ namespace OLED {
         // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
         // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         cmd1(0xc0)       // SSD1306_COMSCANDEC
-        // MAX_Y = 63
-        // MAX_X = 127
+        MAX_Y = 63
+        MAX_X = 127
 
         fill(0)
         orientation = VERTICAL
@@ -405,8 +411,8 @@ namespace OLED {
         // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
         // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         cmd1(0xc8)       // SSD1306_COMSCANDEC
-        // MAX_X = 127
-        // MAX_Y = 63
+        MAX_X = 127
+        MAX_Y = 63
 
         fill(0)
         orientation = HORIZONTAL
