@@ -129,37 +129,41 @@ namespace OLED {
     function char(c: string, col: number, row: number, color: number = 1) {
         let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
 
-        if (orientation === HORIZONTAL) {
-            let ind = col + row * 128 + 1
+        // if (orientation === HORIZONTAL) {
+        //     let ind = col + row * 128 + 1
 
-            for (let i = 0; i < 5; i++) {
-                _screen[ind + i] = (color > 0) ? Font_5x7[p + i] : Font_5x7[p + i] ^ 0xFF
-                _buf7[i + 1] = _screen[ind + i]
-            }
-            _screen[ind + 5] = (color > 0) ? 0 : 0xFF
-            _buf7[6] = _screen[ind + 5]
-            set_pos(col, row)
-            pins.i2cWriteBuffer(_I2CAddr, _buf7)
+        //     for (let i = 0; i < 5; i++) {
+        //         _screen[ind + i] = (color > 0) ? Font_5x7[p + i] : Font_5x7[p + i] ^ 0xFF
+        //         _buf7[i + 1] = _screen[ind + i]
+        //     }
+        //     _screen[ind + 5] = (color > 0) ? 0 : 0xFF
+        //     _buf7[6] = _screen[ind + 5]
+        //     set_pos(col, row)
+        //     pins.i2cWriteBuffer(_I2CAddr, _buf7)
 
-        } else {
+        // } else {
 
-            // Loop through the 5 columns of the 5x7 font
-            for (let i = 0; i < 5; i++) {
-                let fontByte = Font_5x7[p + i]
+        // Loop through the 5 columns of the 5x7 font
+        for (let i = 0; i < 5; i++) {
+            let fontByte = Font_5x7[p + i]
 
-                // Loop through the 8 vertical bits (rows) of the current font column
-                for (let bit = 0; bit < 8; bit++) {
-                    // Determine if this specific pixel is on (1) or off (0)
-                    let pixelOn = (fontByte & (1 << bit)) ? 1 : 0
+            // Loop through the 8 vertical bits (rows) of the current font column
+            for (let bit = 0; bit < 8; bit++) {
+                // Determine if this specific pixel is on (1) or off (0)
+                let pixelOn = (fontByte & (1 << bit)) ? 1 : 0
 
-                    // If color = 0 (inverted text), invert the pixel logic
-                    let drawColor = (color > 0) ? pixelOn : (pixelOn ^ 1)
+                // If color = 0 (inverted text), invert the pixel logic
+                let drawColor = (color > 0) ? pixelOn : (pixelOn ^ 1)
 
-                    // Draw the pixel using the adaptive pixel helper
-                    // pixel(col + i, (row * 8) + bit, drawColor)
+                // Draw the pixel using the adaptive pixel helper
+                // pixel(col + i, (row * 8) + bit, drawColor)
+                if (orientation === VERTICAL) {
                     pixel((col) + bit, (row + i), drawColor)
+                } else {
+                    pixel((row) + bit, (col + i), drawColor)         
                 }
-            }
+                }
+            // }
 
         }
     }
