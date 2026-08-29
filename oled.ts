@@ -186,7 +186,11 @@ namespace OLED {
     export function String(s: string, col: number, row: number, color: number = 1) {
         for (let n = 0; n < s.length; n++) {
             char(s.charAt(n), col, row, color)
-            col += 6
+            if (orientation === HORIZONTAL) {
+                col += 6
+            } else {
+                row +=6
+            }
             if (col > (MAX_X - 6)) return
         }
     }
