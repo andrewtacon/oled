@@ -77,7 +77,7 @@ namespace OLED {
             if (orientation === VERTICAL) {
                 //need to switch to horizontal to match buffer setup)
                 cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
-                // cmd1(0xc8)       // SSD1306_COMSCANDEC
+                cmd1(0xc8)       // SSD1306_COMSCANDEC
             }
 
             set_pos()
@@ -86,7 +86,7 @@ namespace OLED {
             if (orientation === VERTICAL) {
                 //need to switch to horizontal to match buffer setup)
                 cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
-                // cmd1(0xc0)       // SSD1306_COMSCANDEC
+                cmd1(0xc0)       // SSD1306_COMSCANDEC
             }
 
         }
@@ -320,11 +320,11 @@ namespace OLED {
         cmd2(0xD3, 0x00) // SSD1306_SETDISPLAYOFFSET
         cmd1(0 | 0x0)    // line #SSD1306_SETSTARTLINE
         cmd2(0x8D, 0x14) // SSD1306_CHARGEPUMP
-        // cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
-        // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
-        // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
+        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+        cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
+        cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         cmd1(0xa0 | 0x1) // SSD1306_SEGREMAP
-        // cmd1(0xc8)       // SSD1306_COMSCANDEC
+        cmd1(0xc8)       // SSD1306_COMSCANDEC
         cmd2(0xDA, 0x12) // SSD1306_SETCOMPINS
         cmd2(0x81, 0xCF) // SSD1306_SETCONTRAST
         cmd2(0xd9, 0xF1) // SSD1306_SETPRECHARGE
@@ -341,10 +341,10 @@ namespace OLED {
     //% blockId="OLED_vertical" block="OLED Vertical Orientation"
     //% weight=10 blockGap=8
     export function orientVertical() {
-        cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
-        cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
-        cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         cmd1(0xc0)       // SSD1306_COMSCANDEC
+        cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
+        // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
+        // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         MAX_Y = 63
         MAX_X = 127
 
@@ -358,10 +358,10 @@ namespace OLED {
     //% blockId="OLED_horizontal" block="OLED Horizontal Orientation"
     //% weight=10 blockGap=8
     export function orientHorizontal() {
-        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
-        cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
-        cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         cmd1(0xc8)       // SSD1306_COMSCANDEC
+        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+        // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
+        // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         MAX_X = 127
         MAX_Y = 63
 
