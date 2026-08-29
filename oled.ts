@@ -158,7 +158,9 @@ namespace OLED {
                 // Draw the pixel using the adaptive pixel helper
                 // pixel(col + i, (row * 8) + bit, drawColor)
                 if (orientation === VERTICAL) {
+                    orientation = HORIZONTAL
                     pixel((col) + bit, (row + i), drawColor)
+                    orientation = VERTICAL
                 } else {
                     pixel((col) + i, (row + bit), drawColor)         
                 }
