@@ -21,6 +21,9 @@ namespace OLED {
     const MAX_X = 127
     const MAX_Y = 63
 
+    const VERTICAL = 1
+    const HORIZONTAL = 2
+
     let _I2CAddr = 60
     let _screen = pins.createBuffer(1025)
     let _buf2 = pins.createBuffer(2)
@@ -31,6 +34,7 @@ namespace OLED {
     let _DRAW = 1
     let _cx = 0
     let _cy = 0
+    let orientation = VERTICAL
 
     function cmd1(d: number) {
         let n = d % 256;
@@ -263,7 +267,7 @@ namespace OLED {
     //% weight=30 blockGap=8
     export function fill(value: number) {
         if (value < 0) { value = 0 }
-        else if (value>255) {value = 255}
+        else if (value > 255) { value = 255 }
         _cx = _cy = 0
         _screen.fill(value)
         _screen[0] = 0x40
@@ -276,7 +280,7 @@ namespace OLED {
     //% blockId="OLED_ON" block="Display %on"
     //% on.defl=1
     //% weight=62 blockGap=8
-    export function display(on: DISPLAY_ONOFF=DISPLAY_ONOFF.DISPLAY_ON) {
+    export function display(on: DISPLAY_ONOFF = DISPLAY_ONOFF.DISPLAY_ON) {
         let d = (on == DISPLAY_ONOFF.DISPLAY_ON) ? 0xAF : 0xAE;
         cmd1(d)
     }
@@ -307,6 +311,32 @@ namespace OLED {
         cmd2(0xD6, 0)    // zoom off
         cmd1(0xAF)       // SSD1306_DISPLAYON
         fill(0)
+    }
+
+    /**
+     * Change orientation to vertical
+     */
+    //% blockId="OLED_vertical" block="OLED Vertical Orientation"
+    //% weight=10 blockGap=8
+    export function orientVertical() {
+        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+        cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
+        cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
+        fill(0)
+        orientation = VERTICAL
+    }
+
+    /**
+     * Change orientation to horizontal
+     */
+    //% blockId="OLED_horizontal" block="OLED Horizontal Orientation"
+    //% weight=10 blockGap=8
+    export function orientHorizontal() {
+        cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
+        cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
+        cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
+        fill(0)
+        orientation = HORIZONTAL
     }
 
     init();
