@@ -255,7 +255,7 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
     export function vline(x: number, y: number, len: number, color: number = 1) {
-        if (orientation === VERTICAL) {
+        if (orientation === HORIZONTAL) {
             hline(x, y, len, color)
             return
         }
@@ -361,9 +361,9 @@ namespace OLED {
     //% weight=10 blockGap=8
     export function orientVertical() {
         cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
-        cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
-        cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
-        // cmd1(0xc0)       // SSD1306_COMSCANDEC
+        // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
+        // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
+        cmd1(0xc0)       // SSD1306_COMSCANDEC
         MAX_Y = 63
         MAX_X = 127
 
@@ -378,9 +378,9 @@ namespace OLED {
     //% weight=10 blockGap=8
     export function orientHorizontal() {
         cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
-        cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
-        cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
-        // cmd1(0xc8)       // SSD1306_COMSCANDEC
+        // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
+        // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
+        cmd1(0xc8)       // SSD1306_COMSCANDEC
         MAX_X = 127
         MAX_Y = 63
 
