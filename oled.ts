@@ -376,6 +376,34 @@ namespace OLED {
     }
 
 
+    /**
+     * draw a circle
+     */
+    //% blockId="OLED_IMAGE" block="draw image  image %image|x %x|y %y|color %color"
+    //% color.defl=1
+    //% weight=70 blockGap=8 inlineInputMode=inline
+    export function image(image:string, x: number, y: number, color: number) {
+        let start = x
+        image = image.trim()
+        let inverse = color===1?0:1
+        for (let i = 0; i < image.length; i++){
+            switch (image[i]) {
+                case "\n":
+                    x = start
+                    y++
+                    break;
+                case ".":
+                    pixel(x, y, inverse)
+                    x++
+                    break
+                case "#":
+                    pixel(x, y, inverse)
+                    x++
+                    break
+            }
+
+        }
+    }
 
 
 
@@ -517,37 +545,3 @@ namespace OLED {
     init();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-// // let flippedVertical = true
-// /**
-//  * Flip screen vertically
-//  */
-// //% blockId="OLED_flip_vertical" block="OLED Flip Vertical Direction"
-// //% weight=10 blockGap=8
-// export function flipVertical(change: boolean) {
-//     change ? cmd1(0xC8) : cmd1(0xC0)
-//     // flippedVertical = !flippedVertical
-//     draw(1)
-// }
-
-// // let flippedHorizontal = true
-// /**
-//  * Flip screen horizontally
-//  */
-// //% blockId="OLED_flip_horizontal" block="OLED Flip Horizonatal Direction"
-// //% weight=10 blockGap=8
-// export function flipHorizontal(change: boolean) {
-//     change ? cmd1(0xA0) : cmd1(0xA1)
-//     // flippedHorizontal = !flippedHorizontal
-//     draw(1)
-// }
