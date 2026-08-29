@@ -400,10 +400,11 @@ namespace OLED {
         //fails c0 a1 01
         //fails c0 a0 00
         //fails c0 a1 00
+        //fails c8 a1 00
 
         orientation = EAST
         cmd1(0xc8)       // SSD1306_COMSCANDEC
-        cmd1(0xA1)
+        cmd1(0xA0)
         cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
         MAX_X = 127
         MAX_Y = 63
