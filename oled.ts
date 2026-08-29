@@ -100,7 +100,8 @@ namespace OLED {
 
         // Calculate buffer index based on current memory addressing mode
         if (orientation === VERTICAL) {
-            ind = page + (x * 8) + 1
+            // ind = page + (x * 8) + 1
+            ind = x + (page * 64) + 1
         } else {
             ind = x + (page * 128) + 1
         }
@@ -129,20 +130,6 @@ namespace OLED {
     function char(c: string, col: number, row: number, color: number = 1) {
         let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
 
-        // if (orientation === HORIZONTAL) {
-        //     let ind = col + row * 128 + 1
-
-        //     for (let i = 0; i < 5; i++) {
-        //         _screen[ind + i] = (color > 0) ? Font_5x7[p + i] : Font_5x7[p + i] ^ 0xFF
-        //         _buf7[i + 1] = _screen[ind + i]
-        //     }
-        //     _screen[ind + 5] = (color > 0) ? 0 : 0xFF
-        //     _buf7[6] = _screen[ind + 5]
-        //     set_pos(col, row)
-        //     pins.i2cWriteBuffer(_I2CAddr, _buf7)
-
-        // } else {
-
         // Loop through the 5 columns of the 5x7 font
         for (let i = 0; i < 5; i++) {
             let fontByte = Font_5x7[p + i]
@@ -162,45 +149,30 @@ namespace OLED {
                     pixel((row) + bit, (col + i), drawColor)
                     // orientation = VERTICAL
                 } else {
-                    pixel((col) + i, (row + bit), drawColor)         
+                    pixel((col) + i, (row + bit), drawColor)
                 }
-                }
-            // }
+            }
 
         }
     }
 
 
 
-
-
     /**
      * show text in OLED
      */
-    //% blockId="OLED_SHOWSTRING" block="show string %s|at col %col|row %row|color %color"
-    //% s.defl='Hello'
-    //% col.max=120 col.min=0 col.defl=0
-    //% row.max=7 row.min=0 row.defl=0
+    //% blockId="OLED_SHOWSTRING" block="show string %s|at x %col|y %row|color %color"
+    //% s.defl=''
+    //% col.max=127 col.min=0 col.defl=0
+    //% row.max=127 row.min=0 row.defl=0
     //% color.max=1 color.min=0 color.defl=1
     //% weight=80 blockGap=8 inlineInputMode=inline
-    export function String(s: string, col: number, row: number, color: number = 1) {
-        //error is somewhere that is causing ghosting of letters when print 
-        //the, using pixels
-        // if (orientation === VERTICAL) {
-        //     let t = row
-        //     row = col
-        //     col = t
-        // }
+    export function String(s: string, x: number, y: number, color: number = 1) {
 
         for (let n = 0; n < s.length; n++) {
-            char(s.charAt(n), col, row, color)
-            // if (orientation === HORIZONTAL) {
-                col += 6
-                if (col > (MAX_X - 6)) return
-            // } else {
-            //     row += 6
-            //     if (row > (MAX_Y - 6)) break
-            // }
+            char(s.charAt(n), x, y, color)
+            x += 6
+            if (x > (MAX_X - 6)) break
         }
 
         if (orientation === VERTICAL) {
@@ -212,14 +184,14 @@ namespace OLED {
     /**
      * show a number in OLED
      */
-    //% blockId="OLED_NUMBER" block="show Number %num|at col %col|row %row|color %color"
-    //% num.defl=100
-    //% col.max=120 col.min=0 col.defl=0
-    //% row.max=7 row.min=0 row.defl=0
+    //% blockId="OLED_NUMBER" block="show Number %num|at x %col|y %row|color %color"
+    //% num.defl=0
+    //% col.max=127 col.min=0 col.defl=0
+    //% row.max=127 row.min=0 row.defl=0
     //% color.max=1 color.min=0 color.defl=1
     //% weight=80 blockGap=8 inlineInputMode=inline
-    export function Number(num: number, col: number, row: number, color: number = 1) {
-        String(num.toString(), col, row, color)
+    export function Number(num: number, x: number, y: number, color: number = 1) {
+        String(num.toString(), x, y, color)
     }
 
     function scroll() {
@@ -231,39 +203,6 @@ namespace OLED {
             _screen[0] = 0x40
             draw(1)
         }
-    }
-
-    /**
-     * print a text in OLED
-     */
-    //% block="print %s|color %color|newline %newline"
-    //% s.defl="string"
-    //% color.max=1 color.min=0 color.defl=1
-    //% newline.defl=true
-    //% weight=80 blockGap=8 inlineInputMode=inline
-    export function printString(s: string, color: number, newline: boolean = true) {
-        for (let n = 0; n < s.length; n++) {
-            char(s.charAt(n), _cx, _cy, color)
-            _cx += 6
-            if (_cx > MAX_X - 6) {
-                scroll()
-            }
-        }
-        if (newline) {
-            scroll()
-        }
-    }
-
-    /**
-     * print a Number in OLED
-     */
-    //% block="print number %num|color %color|newline %newline"
-    //% s.defl="0"
-    //% color.max=1 color.min=0 color.defl=1
-    //% newline.defl=true
-    //% weight=80 blockGap=8 inlineInputMode=inline
-    export function printNumber(num: number, color: number, newline: boolean = true) {
-        printString(num.toString(), color, newline)
     }
 
     /**
@@ -384,11 +323,11 @@ namespace OLED {
         cmd2(0xD3, 0x00) // SSD1306_SETDISPLAYOFFSET
         cmd1(0 | 0x0)    // line #SSD1306_SETSTARTLINE
         cmd2(0x8D, 0x14) // SSD1306_CHARGEPUMP
-        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
-        cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
-        cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
+        // cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+        // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
+        // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         cmd1(0xa0 | 0x1) // SSD1306_SEGREMAP
-        cmd1(0xc8)       // SSD1306_COMSCANDEC
+        // cmd1(0xc8)       // SSD1306_COMSCANDEC
         cmd2(0xDA, 0x12) // SSD1306_SETCOMPINS
         cmd2(0x81, 0xCF) // SSD1306_SETCONTRAST
         cmd2(0xd9, 0xF1) // SSD1306_SETPRECHARGE
