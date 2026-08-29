@@ -205,6 +205,66 @@ namespace OLED {
     }
 
     /**
+     * draw a straight line
+     */
+    //% blockId="OLED_LINE" block="draw a line from x1 %x|y1 %y|x2 %x2|y2 %y2|color %color"
+    //% x1.max=127 x1.min=0 x1.defl=0
+    //% y1.max=127 y1.min=0 y1.defl=0
+    //% x2.max=127 x2.min=0 x2.defl=0
+    //% y2.max=127 y2.min=0 y2.defl=0
+    //% color.max=1 color.min=0 color.defl=1
+    //% weight=71 blockGap=8 inlineInputMode=inline
+    export function line(x1: number, y1: number, x2: number, y2: number, color: number = 1, skipCheck: boolean = false) {
+        let _sav = _DRAW
+        if ((y1 < MIN_Y) || (y1 > MAX_Y)) return
+        if ((y2 < MIN_Y) || (y2 > MAX_Y)) return
+        if ((x1 < MIN_X) || (x1 > MAX_X)) return
+        if ((x2 < MIN_X) || (x2 > MAX_X)) return
+
+        _DRAW = 0
+
+        // Calculate total distances
+        const dx = Math.abs(x2 - x1);
+        const dy = Math.abs(x2 - x1) === 0 ? Math.abs(y2 - y1) : Math.abs(y2 - y1); // Guarding 0 distance
+
+        // Determine the step direction for X and Y axes
+        const sx = x1 < x2 ? 1 : -1;
+        const sy = y1 < y2 ? 1 : -1;
+
+        // Initial error term
+        let err = dx - dy;
+
+        while (true) {
+            // Store current pixel coordinate
+            pixel(x1, y1, color);
+
+            // Break loop when destination point is reached
+            if (x1 === x2 && y1 === y2) break;
+
+            const e2 = 2 * err;
+
+            // Adjust X coordinate and error
+            if (e2 > -dy) {
+                err -= dy;
+                x1 += sx;
+            }
+
+            // Adjust Y coordinate and error
+            if (e2 < dx) {
+                err += dx;
+                y1 += sy;
+            }
+        }
+
+
+
+        _DRAW = _sav
+        draw(_DRAW)
+    }
+
+
+
+    /**
      * draw a horizontal line
      */
     //% blockId="OLED_HLINE" block="draw a horizontal line at x %x|y %y|length %len|color %color"
@@ -238,7 +298,7 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
     export function vline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
-        if ((orientation === WEST || orientation=== EAST)&& !skipCheck) {
+        if ((orientation === WEST || orientation === EAST) && !skipCheck) {
             hline(y, x, len, color, true)
             return
         }
@@ -409,7 +469,7 @@ namespace OLED {
 
 
     init();
-}  
+}
 
 
 
@@ -422,26 +482,26 @@ namespace OLED {
 
 
 
-    // // let flippedVertical = true
-    // /**
-    //  * Flip screen vertically
-    //  */
-    // //% blockId="OLED_flip_vertical" block="OLED Flip Vertical Direction"
-    // //% weight=10 blockGap=8
-    // export function flipVertical(change: boolean) {
-    //     change ? cmd1(0xC8) : cmd1(0xC0)
-    //     // flippedVertical = !flippedVertical
-    //     draw(1)
-    // }
+// // let flippedVertical = true
+// /**
+//  * Flip screen vertically
+//  */
+// //% blockId="OLED_flip_vertical" block="OLED Flip Vertical Direction"
+// //% weight=10 blockGap=8
+// export function flipVertical(change: boolean) {
+//     change ? cmd1(0xC8) : cmd1(0xC0)
+//     // flippedVertical = !flippedVertical
+//     draw(1)
+// }
 
-    // // let flippedHorizontal = true
-    // /**
-    //  * Flip screen horizontally
-    //  */
-    // //% blockId="OLED_flip_horizontal" block="OLED Flip Horizonatal Direction"
-    // //% weight=10 blockGap=8
-    // export function flipHorizontal(change: boolean) {
-    //     change ? cmd1(0xA0) : cmd1(0xA1)
-    //     // flippedHorizontal = !flippedHorizontal
-    //     draw(1)
-    // }
+// // let flippedHorizontal = true
+// /**
+//  * Flip screen horizontally
+//  */
+// //% blockId="OLED_flip_horizontal" block="OLED Flip Horizonatal Direction"
+// //% weight=10 blockGap=8
+// export function flipHorizontal(change: boolean) {
+//     change ? cmd1(0xA0) : cmd1(0xA1)
+//     // flippedHorizontal = !flippedHorizontal
+//     draw(1)
+// }
