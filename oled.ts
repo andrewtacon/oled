@@ -150,7 +150,8 @@ namespace OLED {
                     let drawColor = (color > 0) ? pixelOn : (pixelOn ^ 1)
 
                     // Draw the pixel using the adaptive pixel helper
-                    pixel(row + i, (col * 8) + bit, drawColor)
+                    // pixel(col + i, (row * 8) + bit, drawColor)
+                    pixel((col *8)+bit, (row +i) , drawColor)
                 }
             }
 
