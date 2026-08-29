@@ -178,10 +178,11 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=80 blockGap=8 inlineInputMode=inline
     export function String(s: string, col: number, row: number, color: number = 1) {
-
+        //error is somewhere that is causing ghosting of letters when print 
+        //the, using pixels
         if (orientation === VERTICAL) {
             let t = row
-            col = row
+            row = col
             col = t
         }
 
