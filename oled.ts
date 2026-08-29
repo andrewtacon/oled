@@ -18,8 +18,8 @@ namespace OLED {
 
     const MIN_X = 0
     const MIN_Y = 0
-    const MAX_X = 127
-    const MAX_Y = 63
+    let MAX_X = 127
+    let MAX_Y = 63
 
     const VERTICAL = 1
     const HORIZONTAL = 2
@@ -90,16 +90,48 @@ namespace OLED {
     export function pixel(x: number, y: number, color: number = 1) {
         let page = y >> 3
         let shift_page = y % 8
-        let ind = x + page * 128 + 1
+        let ind = 0
+
+        // Calculate buffer index based on current memory addressing mode
+        if (orientation === VERTICAL) {
+            ind = page + (x * 8) + 1
+        } else {
+            ind = x + (page * 128) + 1
+        }
+
         let b = (color) ? (_screen[ind] | (1 << shift_page)) : clrbit(_screen[ind], shift_page)
         _screen[ind] = b
+
         if (_DRAW) {
-            set_pos(x, page)
+            if (orientation === VERTICAL) {
+                // In vertical mode, set_pos must target the specific column range 
+                // and page range before writing the altered byte
+                cmd3(0x21, x, 127)    // Set column start address to current X
+                cmd3(0x22, page, 7)   // Set page start address to current page
+            } else {
+                set_pos(x, page)
+            }
+
             _buf2[0] = 0x40
             _buf2[1] = b
             pins.i2cWriteBuffer(_I2CAddr, _buf2)
         }
     }
+
+
+    // export function pixel(x: number, y: number, color: number = 1) {
+    //     let page = y >> 3
+    //     let shift_page = y % 8
+    //     let ind = x + page * 128 + 1
+    //     let b = (color) ? (_screen[ind] | (1 << shift_page)) : clrbit(_screen[ind], shift_page)
+    //     _screen[ind] = b
+    //     if (_DRAW) {
+    //         set_pos(x, page)
+    //         _buf2[0] = 0x40
+    //         _buf2[1] = b
+    //         pins.i2cWriteBuffer(_I2CAddr, _buf2)
+    //     }
+    // }
 
     function char(c: string, col: number, row: number, color: number = 1) {
         let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
@@ -319,9 +351,12 @@ namespace OLED {
     //% blockId="OLED_vertical" block="OLED Vertical Orientation"
     //% weight=10 blockGap=8
     export function orientVertical() {
-        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+        cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
         cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
         cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
+        MAX_Y = 63
+        MAX_X = 127
+
         fill(0)
         orientation = VERTICAL
     }
@@ -332,9 +367,12 @@ namespace OLED {
     //% blockId="OLED_horizontal" block="OLED Horizontal Orientation"
     //% weight=10 blockGap=8
     export function orientHorizontal() {
-        cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
+        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
         cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
         cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
+        MAX_X = 127
+        MAX_Y = 63
+
         fill(0)
         orientation = HORIZONTAL
     }
