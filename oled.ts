@@ -395,39 +395,39 @@ namespace OLED {
     //% weight=10 blockGap=8
     export function orientEast() {
         orientation = EAST
-        // cmd1(0xc0)       // SSD1306_COMSCANDEC
+        cmd1(0xc0)       // SSD1306_COMSCANDEC
         cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
         // cmd1(0xA1)
-        cmd1(0xA0)
+        // cmd1(0xA0)
         // cmd1(0xC0)       // SSD1306_COMSCANDEC
-        cmd1(0xC8)       // SSD1306_COMSCANDEC
+        // cmd1(0xC8)       // SSD1306_COMSCANDEC
         MAX_X = 127
         MAX_Y = 63
 
         fill(0)
     }
 
-let flippedVertical = true
+// let flippedVertical = true
     /**
      * Flip screen vertically
      */
     //% blockId="OLED_flip_vertical" block="OLED Flip Vertical Direction"
     //% weight=10 blockGap=8
-    export function flipVertical() {
-        flippedVertical ? cmd1(0xC8) : cmd1(0xC0)
-        flippedVertical = !flippedVertical
+    export function flipVertical(change:boolean) {
+        change ? cmd1(0xC8) : cmd1(0xC0)
+        // flippedVertical = !flippedVertical
         draw(1)
     }
 
-    let flippedHorizontal = true
+    // let flippedHorizontal = true
     /**
      * Flip screen horizontally
      */
     //% blockId="OLED_flip_horizontal" block="OLED Flip Horizonatal Direction"
     //% weight=10 blockGap=8
-    export function flipHorizontal() {
-        flippedHorizontal ? cmd1(0xA0) : cmd1(0xA1)
-        flippedHorizontal = !flippedHorizontal
+    export function flipHorizontal(change: boolean) {
+        change ? cmd1(0xA0) : cmd1(0xA1)
+        // flippedHorizontal = !flippedHorizontal
         draw(1)
     }
 
