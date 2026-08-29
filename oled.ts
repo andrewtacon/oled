@@ -157,11 +157,11 @@ namespace OLED {
 
                 // Draw the pixel using the adaptive pixel helper
                 // pixel(col + i, (row * 8) + bit, drawColor)
-                // if (orientation === VERTICAL) {
-                //     pixel((col) + bit, (row + i), drawColor)
-                // } else {
-                    pixel((row) + bit, (col + i), drawColor)         
-                // }
+                if (orientation === VERTICAL) {
+                    pixel((col) + bit, (row + i), drawColor)
+                } else {
+                    pixel((col) + i, (row + bit), drawColor)         
+                }
                 }
             // }
 
