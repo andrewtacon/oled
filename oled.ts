@@ -394,9 +394,10 @@ namespace OLED {
     //% blockId="OLED_east" block="OLED East Orientation"
     //% weight=10 blockGap=8
     export function orientEast() {
+        //fails  c8 a1
         orientation = EAST
         cmd1(0xc8)       // SSD1306_COMSCANDEC
-        cmd1(0xA1)
+        cmd1(0xA0)
         cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
         MAX_X = 127
         MAX_Y = 63
