@@ -315,6 +315,9 @@ namespace OLED {
     //% blockId="OLED_init" block="Initial OLED"
     //% weight=10 blockGap=8
     export function init() {
+
+        OLED.setI2CSpeed()
+
         cmd1(0xAE)       // SSD1306_DISPLAYOFF
         cmd1(0xA4)       // SSD1306_DISPLAYALLON_RESUME
         cmd2(0xD5, 0xF0) // SSD1306_SETDISPLAYCLOCKDIV
@@ -333,8 +336,6 @@ namespace OLED {
         cmd2(0xDB, 0x40) // SSD1306_SETVCOMDETECT
         cmd1(0xA6)       // SSD1306_NORMALDISPLAY
         cmd2(0xD6, 0)    // zoom off
-
-
 
         cmd1(0xAF)       // SSD1306_DISPLAYON
         orientNorth()
@@ -397,39 +398,47 @@ namespace OLED {
         orientation = EAST
         cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
         cmd1(0xc8)       // SSD1306_COMSCANDEC
-        //  cmd1(0xA1)
         cmd1(0xA0)
-        // cmd1(0xC0)       // SSD1306_COMSCANDEC
-        // cmd1(0xC8)       // SSD1306_COMSCANDEC
         MAX_X = 127
         MAX_Y = 63
-
         fill(0)
     }
 
-    // let flippedVertical = true
-    /**
-     * Flip screen vertically
-     */
-    //% blockId="OLED_flip_vertical" block="OLED Flip Vertical Direction"
-    //% weight=10 blockGap=8
-    export function flipVertical(change: boolean) {
-        change ? cmd1(0xC8) : cmd1(0xC0)
-        // flippedVertical = !flippedVertical
-        draw(1)
-    }
-
-    // let flippedHorizontal = true
-    /**
-     * Flip screen horizontally
-     */
-    //% blockId="OLED_flip_horizontal" block="OLED Flip Horizonatal Direction"
-    //% weight=10 blockGap=8
-    export function flipHorizontal(change: boolean) {
-        change ? cmd1(0xA0) : cmd1(0xA1)
-        // flippedHorizontal = !flippedHorizontal
-        draw(1)
-    }
 
     init();
 }  
+
+
+
+
+
+
+
+
+
+
+
+
+    // // let flippedVertical = true
+    // /**
+    //  * Flip screen vertically
+    //  */
+    // //% blockId="OLED_flip_vertical" block="OLED Flip Vertical Direction"
+    // //% weight=10 blockGap=8
+    // export function flipVertical(change: boolean) {
+    //     change ? cmd1(0xC8) : cmd1(0xC0)
+    //     // flippedVertical = !flippedVertical
+    //     draw(1)
+    // }
+
+    // // let flippedHorizontal = true
+    // /**
+    //  * Flip screen horizontally
+    //  */
+    // //% blockId="OLED_flip_horizontal" block="OLED Flip Horizonatal Direction"
+    // //% weight=10 blockGap=8
+    // export function flipHorizontal(change: boolean) {
+    //     change ? cmd1(0xA0) : cmd1(0xA1)
+    //     // flippedHorizontal = !flippedHorizontal
+    //     draw(1)
+    // }
