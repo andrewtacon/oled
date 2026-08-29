@@ -332,7 +332,7 @@ namespace OLED {
         cmd1(0xA6)       // SSD1306_NORMALDISPLAY
         cmd2(0xD6, 0)    // zoom off
 
-        cmd1(0xA0)  //flip horizonatal
+
 
         cmd1(0xAF)       // SSD1306_DISPLAYON
         orientHorizontal()
@@ -367,6 +367,32 @@ namespace OLED {
 
         fill(0)
     }
+
+    let flippedVertical = false
+    /**
+     * Flip screen vertically
+     */
+    //% blockId="OLED_flip_vertical" block="OLED Flip Vertical Direction"
+    //% weight=10 blockGap=8
+    export function flipVertical() {
+        flippedVertical ? cmd1(0xC8) : cmd1(0xC0)
+        flippedVertical = !flippedVertical
+        draw(1)
+    }
+
+    let flippedHorizontal = false
+    /**
+     * Flip screen horizontally
+     */
+    //% blockId="OLED_flip_horizontal" block="OLED Flip Horizonatal Direction"
+    //% weight=10 blockGap=8
+    export function flipHorizontal() {
+        flippedHorizontal ? cmd1(0xA0) : cmd1(0xA1)
+        flippedHorizontal = !flippedHorizontal
+        draw(1)
+    }
+
+
 
     init();
 }  
