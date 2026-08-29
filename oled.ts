@@ -76,7 +76,7 @@ namespace OLED {
      */
     function draw(d: number) {
         if (d > 0) {
-            if (orientation === WEST) {
+            if (orientation === WEST || orientation === EAST) {
                 //need to switch to horizontal to match buffer setup)
                 cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
                 // cmd1(0xc8)       // SSD1306_COMSCANDEC
@@ -85,7 +85,7 @@ namespace OLED {
             set_pos()
             pins.i2cWriteBuffer(_I2CAddr, _screen)
 
-            if (orientation === WEST) {
+            if (orientation === WEST || orientation === EAST) {
                 //need to switch to horizontal to match buffer setup)
                 cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
                 // cmd1(0xc0)       // SSD1306_COMSCANDEC
@@ -397,7 +397,7 @@ namespace OLED {
         orientation = EAST
         cmd1(0xc0)       // SSD1306_COMSCANDEC
         cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
-        // cmd1(0xA1)
+    //  cmd1(0xA1)
         // cmd1(0xA0)
         // cmd1(0xC0)       // SSD1306_COMSCANDEC
         // cmd1(0xC8)       // SSD1306_COMSCANDEC
