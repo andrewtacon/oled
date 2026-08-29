@@ -27,7 +27,7 @@ namespace OLED {
     const SOUTH = 4
 
     let _I2CAddr = 60
-    let _screen = pins.createBuffer(1024)
+    let _screen = pins.createBuffer(1280)
     let _buf2 = pins.createBuffer(2)
     let _buf3 = pins.createBuffer(3)
     let _buf4 = pins.createBuffer(4)
