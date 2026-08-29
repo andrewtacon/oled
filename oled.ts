@@ -379,7 +379,7 @@ namespace OLED {
     export function orientSouth() {
         orientation = SOUTH
         cmd1(0xc0)       // SSD1306_COMSCANDEC
-        cmd1(0xA1)
+        cmd1(0xA0)
         cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
         MAX_X = 127
         MAX_Y = 63
@@ -397,7 +397,7 @@ namespace OLED {
         orientation = EAST
         cmd1(0xc8)       // SSD1306_COMSCANDEC
         cmd1(0xA1)
-        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+        cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
         MAX_X = 127
         MAX_Y = 63
 
