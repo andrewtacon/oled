@@ -231,6 +231,10 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
     export function hline(x: number, y: number, len: number, color: number = 1) {
+        if (orientation === VERTICAL) {
+            vline(x, y, len, color)
+            return
+        }
         let _sav = _DRAW
         if ((y < MIN_Y) || (y > MAX_Y)) return
         _DRAW = 0
@@ -251,6 +255,11 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
     export function vline(x: number, y: number, len: number, color: number = 1) {
+        if (orientation === HORIZONTAL) {
+            hline(x, y, len, color)
+            return
+        }
+      
         let _sav = _DRAW
         _DRAW = 0
         if ((x < MIN_X) || (x > MAX_X)) return
