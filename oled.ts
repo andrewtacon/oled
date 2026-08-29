@@ -99,25 +99,25 @@ namespace OLED {
         let ind = 0
 
         // Calculate buffer index based on current memory addressing mode
-        if (orientation === VERTICAL) {
-            // ind = page + (x * 8) + 1
-            ind = x + (page * 64) + 1
-        } else {
+        // if (orientation === VERTICAL) {
+        //     // ind = page + (x * 8) + 1
+        //     ind = x + (page * 64) + 1
+        // } else {
             ind = x + (page * 128) + 1
-        }
+        // }
 
         let b = (color) ? (_screen[ind] | (1 << shift_page)) : clrbit(_screen[ind], shift_page)
         _screen[ind] = b
 
         if (_DRAW) {
-            if (orientation === VERTICAL) {
-                // In vertical mode, set_pos must target the specific column range 
-                // and page range before writing the altered byte
-                cmd3(0x21, x, 127)    // Set column start address to current X
-                cmd3(0x22, page, 7)   // Set page start address to current page
-            } else {
+            // if (orientation === VERTICAL) {
+            //     // In vertical mode, set_pos must target the specific column range 
+            //     // and page range before writing the altered byte
+            //     cmd3(0x21, x, 127)    // Set column start address to current X
+            //     cmd3(0x22, page, 7)   // Set page start address to current page
+            // } else {
                 set_pos(x, page)
-            }
+            // }
 
             _buf2[0] = 0x40
             _buf2[1] = b
@@ -145,9 +145,7 @@ namespace OLED {
                 // Draw the pixel using the adaptive pixel helper
                 // pixel(col + i, (row * 8) + bit, drawColor)
                 if (orientation === VERTICAL) {
-                    // orientation = HORIZONTAL
                     pixel((row) + bit, (col + i), drawColor)
-                    // orientation = VERTICAL
                 } else {
                     pixel((col) + i, (row + bit), drawColor)
                 }
