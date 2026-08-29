@@ -150,20 +150,22 @@ namespace OLED {
                     let drawColor = (color > 0) ? pixelOn : (pixelOn ^ 1)
 
                     // Draw the pixel using the adaptive pixel helper
-                    pixel(row + i, (col * 8) + bit, drawColor)
+                    pixel(col + i, (row * 8) + bit, drawColor)
                 }
             }
-            // In vertical mode, bound the update zone to this specific character block
-            cmd3(0x21, row, row + 5)
-            cmd3(0x22, col, col)
 
-            // Send the exact 6 bytes representing the new character column data
-            for (let i = 0; i < 6; i++) {
-                let pageIndex = col + ((row + i) * 8) + 1
-                _buf2[0] = 0x40
-                _buf2[1] = _screen[pageIndex]
-                pins.i2cWriteBuffer(_I2CAddr, _buf2)
-            }
+            draw(1)
+            // In vertical mode, bound the update zone to this specific character block
+            // cmd3(0x21, col, col + 5)
+            // cmd3(0x22, row, row)
+
+            // // Send the exact 6 bytes representing the new character column data
+            // for (let i = 0; i < 6; i++) {
+            //     let pageIndex = row + ((col + i) * 8) + 1
+            //     _buf2[0] = 0x40
+            //     _buf2[1] = _screen[pageIndex]
+            //     pins.i2cWriteBuffer(_I2CAddr, _buf2)
+            // }
         }
     }
 
