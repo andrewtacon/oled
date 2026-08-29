@@ -333,6 +333,52 @@ namespace OLED {
         draw(1)
     }
 
+
+    /**
+     * draw a circle
+     */
+    //% blockId="OLED_CIRCLE" block="draw a circle at x %xc|y %yc|radius %r|color %color"
+    //% color.defl=1
+    //% weight=70 blockGap=8 inlineInputMode=inline
+    export function circle(xc:number, yc:number, r:number, color:number) {
+        let x = 0;
+        let y = r;
+        let d = 3 - 2 * r;
+
+        // Helper function to plot all 8 symmetric points
+        function plotSymmetricPoints(xc:number, yc:number, x:number, y:number) {
+            pixel(xc + x, yc + y, color);
+            pixel(xc - x, yc + y, color);
+            pixel(xc + x, yc - y, color);
+            pixel(xc - x, yc - y, color);
+            pixel(xc + y, yc + x, color);
+            pixel(xc - y, yc + x, color);
+            pixel(xc + y, yc - x, color);
+            pixel(xc - y, yc - x, color);
+        }
+
+        // Plot initial point at the top of the circle
+        plotSymmetricPoints(xc, yc, x, y);
+
+        // Loop through the first octant
+        while (x <= y) {
+            x++;
+
+            if (d < 0) {
+                d = d + 4 * x + 6;
+            } else {
+                y--;
+                d = d + 4 * (x - y) + 10;
+            }
+
+            plotSymmetricPoints(xc, yc, x, y);
+        }
+    }
+
+
+
+
+
     /**
      * invert display
      * @param d true: invert / false: normal, eg: true
