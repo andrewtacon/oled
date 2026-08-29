@@ -25,7 +25,7 @@ namespace OLED {
     const HORIZONTAL = 2
 
     let _I2CAddr = 60
-    let _screen = pins.createBuffer(1025)
+    let _screen = pins.createBuffer(1024)
     let _buf2 = pins.createBuffer(2)
     let _buf3 = pins.createBuffer(3)
     let _buf4 = pins.createBuffer(4)
@@ -74,8 +74,21 @@ namespace OLED {
      */
     function draw(d: number) {
         if (d > 0) {
+            if (orientation === VERTICAL) {
+                //need to switch to horizontal to match buffer setup)
+                cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+                cmd1(0xc8)       // SSD1306_COMSCANDEC
+            }
+
             set_pos()
             pins.i2cWriteBuffer(_I2CAddr, _screen)
+
+            if (orientation === VERTICAL) {
+                //need to switch to horizontal to match buffer setup)
+                cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
+                cmd1(0xc0)       // SSD1306_COMSCANDEC
+            }
+
         }
     }
 
@@ -115,7 +128,7 @@ namespace OLED {
         let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
 
         let oldDraw = _DRAW
-        _DRAW= 0
+        _DRAW = 0
         // Loop through the 5 columns of the 5x7 font
         for (let i = 0; i < 5; i++) {
             let fontByte = Font_5x7[p + i]
