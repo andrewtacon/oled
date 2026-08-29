@@ -143,7 +143,7 @@ namespace OLED {
 
                 // Draw the pixel using the adaptive pixel helper
                 // pixel(col + i, (row * 8) + bit, drawColor)
-                if (orientation === WEST) {
+                if (orientation === WEST || orientation === EAST) {
                     pixel((row) + bit, (col + i), drawColor)
                 } else {
                     pixel((col) + i, (row + bit), drawColor)
@@ -214,7 +214,7 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
     export function hline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
-        if (orientation === WEST && !skipCheck) {
+        if ((orientation === WEST || orientation === EAST) && !skipCheck) {
             vline(x, y, len, color, true)
             return
         }
@@ -238,7 +238,7 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
     export function vline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
-        if (orientation === WEST && !skipCheck) {
+        if ((orientation === WEST || orientation=== EAST)&& !skipCheck) {
             hline(x, y, len, color, true)
             return
         }
