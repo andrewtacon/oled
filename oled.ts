@@ -21,8 +21,10 @@ namespace OLED {
     let MAX_X = 127
     let MAX_Y = 63
 
-    const VERTICAL = 1
-    const HORIZONTAL = 2
+    const WEST = 1
+    const NORTH = 2
+    const EAST = 3
+    const SOUTH = 4
 
     let _I2CAddr = 60
     let _screen = pins.createBuffer(1024)
@@ -34,7 +36,7 @@ namespace OLED {
     let _DRAW = 1
     let _cx = 0
     let _cy = 0
-    let orientation = VERTICAL
+    let orientation = WEST
 
     function cmd1(d: number) {
         let n = d % 256;
@@ -74,7 +76,7 @@ namespace OLED {
      */
     function draw(d: number) {
         if (d > 0) {
-            if (orientation === VERTICAL) {
+            if (orientation === WEST) {
                 //need to switch to horizontal to match buffer setup)
                 cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
                 // cmd1(0xc8)       // SSD1306_COMSCANDEC
@@ -83,7 +85,7 @@ namespace OLED {
             set_pos()
             pins.i2cWriteBuffer(_I2CAddr, _screen)
 
-            if (orientation === VERTICAL) {
+            if (orientation === WEST) {
                 //need to switch to horizontal to match buffer setup)
                 cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
                 // cmd1(0xc0)       // SSD1306_COMSCANDEC
@@ -141,7 +143,7 @@ namespace OLED {
 
                 // Draw the pixel using the adaptive pixel helper
                 // pixel(col + i, (row * 8) + bit, drawColor)
-                if (orientation === VERTICAL) {
+                if (orientation === WEST) {
                     pixel((row) + bit, (col + i), drawColor)
                 } else {
                     pixel((col) + i, (row + bit), drawColor)
@@ -212,7 +214,7 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
     export function hline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
-        if (orientation === VERTICAL && !skipCheck) {
+        if (orientation === WEST && !skipCheck) {
             vline(x, y, len, color, true)
             return
         }
@@ -236,7 +238,7 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
     export function vline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
-        if (orientation === VERTICAL && !skipCheck) {
+        if (orientation === WEST && !skipCheck) {
             hline(x, y, len, color, true)
             return
         }
@@ -335,16 +337,16 @@ namespace OLED {
 
 
         cmd1(0xAF)       // SSD1306_DISPLAYON
-        orientHorizontal()
+        orientNorth()
     }
 
     /**
-     * Change orientation to vertical
+     * Change orientation to west
      */
-    //% blockId="OLED_vertical" block="OLED Vertical Orientation"
+    //% blockId="OLED_west" block="OLED West Orientation"
     //% weight=10 blockGap=8
-    export function orientVertical() {
-        orientation = VERTICAL
+    export function orientWest() {
+        orientation = WEST
         cmd1(0xc0)       // SSD1306_COMSCANDEC
         cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
         MAX_Y = 63
@@ -354,12 +356,12 @@ namespace OLED {
     }
 
     /**
-     * Change orientation to horizontal
+     * Change orientation to north
      */
-    //% blockId="OLED_horizontal" block="OLED Horizontal Orientation"
+    //% blockId="OLED_north" block="OLED North Orientation"
     //% weight=10 blockGap=8
-    export function orientHorizontal() {
-        orientation = HORIZONTAL
+    export function orientNorth() {
+        orientation = NORTH
         cmd1(0xc8)       // SSD1306_COMSCANDEC
         cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
         MAX_X = 127
@@ -368,28 +370,38 @@ namespace OLED {
         fill(0)
     }
 
-    let flippedVertical = false
+
     /**
-     * Flip screen vertically
+     * Change orientation to south
      */
-    //% blockId="OLED_flip_vertical" block="OLED Flip Vertical Direction"
+    //% blockId="OLED_south" block="OLED South Orientation"
     //% weight=10 blockGap=8
-    export function flipVertical() {
-        flippedVertical ? cmd1(0xC8) : cmd1(0xC0)
-        flippedVertical = !flippedVertical
-        draw(1)
+    export function orientSouth() {
+        orientation = SOUTH
+        cmd1(0xc0)       // SSD1306_COMSCANDEC
+        cmd1(0xA1)
+        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+        MAX_X = 127
+        MAX_Y = 63
+
+        fill(0)
     }
 
-    let flippedHorizontal = false
+
     /**
-     * Flip screen horizontally
+     * Change orientation to EAST
      */
-    //% blockId="OLED_flip_horizontal" block="OLED Flip Horizonatal Direction"
+    //% blockId="OLED_east" block="OLED East Orientation"
     //% weight=10 blockGap=8
-    export function flipHorizontal() {
-        flippedHorizontal ? cmd1(0xA0) : cmd1(0xA1)
-        flippedHorizontal = !flippedHorizontal
-        draw(1)
+    export function orientEast() {
+        orientation = EAST
+        cmd1(0xc8)       // SSD1306_COMSCANDEC
+        cmd1(0xA1)
+        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+        MAX_X = 127
+        MAX_Y = 63
+
+        fill(0)
     }
 
 
