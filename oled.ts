@@ -331,6 +331,9 @@ namespace OLED {
         cmd2(0xDB, 0x40) // SSD1306_SETVCOMDETECT
         cmd1(0xA6)       // SSD1306_NORMALDISPLAY
         cmd2(0xD6, 0)    // zoom off
+
+        cmd1(0xA1)  //flip horizonatal
+
         cmd1(0xAF)       // SSD1306_DISPLAYON
         orientHorizontal()
     }
@@ -344,8 +347,6 @@ namespace OLED {
         orientation = VERTICAL
         cmd1(0xc0)       // SSD1306_COMSCANDEC
         cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
-        // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
-        // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         MAX_Y = 63
         MAX_X = 127
 
@@ -361,8 +362,6 @@ namespace OLED {
         orientation = HORIZONTAL
         cmd1(0xc8)       // SSD1306_COMSCANDEC
         cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
-        // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
-        // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         MAX_X = 127
         MAX_Y = 63
 
