@@ -151,7 +151,7 @@ namespace OLED {
 
                     // Draw the pixel using the adaptive pixel helper
                     // pixel(col + i, (row * 8) + bit, drawColor)
-                    pixel((col *8)+bit, (row +i) , drawColor)
+                    pixel((col)+bit, (row +i) , drawColor)
                 }
             }
 
