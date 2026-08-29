@@ -194,13 +194,13 @@ namespace OLED {
 
         for (let n = 0; n < s.length; n++) {
             char(s.charAt(n), col, row, color)
-            if (orientation === HORIZONTAL) {
+            // if (orientation === HORIZONTAL) {
                 col += 6
                 if (col > (MAX_X - 6)) return
-            } else {
-                row += 6
-                if (row > (MAX_Y - 6)) break
-            }
+            // } else {
+            //     row += 6
+            //     if (row > (MAX_Y - 6)) break
+            // }
         }
 
         if (orientation === VERTICAL) {
