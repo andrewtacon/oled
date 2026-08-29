@@ -340,13 +340,13 @@ namespace OLED {
     //% blockId="OLED_CIRCLE" block="draw a circle at x %xc|y %yc|radius %r|color %color"
     //% color.defl=1
     //% weight=70 blockGap=8 inlineInputMode=inline
-    export function circle(xc:number, yc:number, r:number, color:number) {
+    export function circle(xc: number, yc: number, r: number, color: number) {
         let x = 0;
         let y = r;
         let d = 3 - 2 * r;
 
         // Helper function to plot all 8 symmetric points
-        function plotSymmetricPoints(xc:number, yc:number, x:number, y:number) {
+        function plotSymmetricPoints(xc: number, yc: number, x: number, y: number) {
             pixel(xc + x, yc + y, color);
             pixel(xc - x, yc + y, color);
             pixel(xc + x, yc - y, color);
@@ -357,6 +357,7 @@ namespace OLED {
             pixel(xc - y, yc - x, color);
         }
 
+        _DRAW = 0
         // Plot initial point at the top of the circle
         plotSymmetricPoints(xc, yc, x, y);
 
@@ -373,6 +374,9 @@ namespace OLED {
 
             plotSymmetricPoints(xc, yc, x, y);
         }
+
+        _DRAW = 1
+        draw(1)
     }
 
 
@@ -382,27 +386,40 @@ namespace OLED {
     //% blockId="OLED_IMAGE" block="draw image  image %image|x %x|y %y|color %color"
     //% color.defl=1
     //% weight=70 blockGap=8 inlineInputMode=inline
-    export function image(image:string, x: number, y: number, color: number) {
+    export function image(image: string, x: number, y: number, scale: number = 1, color: number = 1) {
         let start = x
         image = image.trim()
-        let inverse = color===1?0:1
-        for (let i = 0; i < image.length; i++){
+        let inverse = color === 1 ? 0 : 1
+
+        _DRAW=0
+        for (let i = 0; i < image.length; i++) {
             switch (image[i]) {
                 case "\n":
                     x = start
-                    y++
+                    y += scale
                     break;
                 case ".":
-                    pixel(x, y, inverse)
-                    x++
+                    for (let k = 0; k < scale; k++) {
+                        for (let l = 0; l < scale; l++) {
+                            pixel(x + k, y + l, inverse)
+                        }
+                    }
+                    x += scale
                     break
                 case "#":
-                    pixel(x, y, color)
-                    x++
+                    for (let k = 0; k < scale; k++) {
+                        for (let l = 0; l < scale; l++) {
+                            pixel(x + k, y + l, color)
+                        }
+                    }
+                    x += scale
                     break
             }
-
         }
+        _DRAW = 1
+        draw(1)
+
+
     }
 
 
