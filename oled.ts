@@ -341,6 +341,7 @@ namespace OLED {
     //% blockId="OLED_vertical" block="OLED Vertical Orientation"
     //% weight=10 blockGap=8
     export function orientVertical() {
+        orientation = VERTICAL
         cmd1(0xc0)       // SSD1306_COMSCANDEC
         cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
         // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
@@ -349,7 +350,6 @@ namespace OLED {
         MAX_X = 127
 
         fill(0)
-        orientation = VERTICAL
     }
 
     /**
@@ -358,6 +358,7 @@ namespace OLED {
     //% blockId="OLED_horizontal" block="OLED Horizontal Orientation"
     //% weight=10 blockGap=8
     export function orientHorizontal() {
+        orientation = HORIZONTAL
         cmd1(0xc8)       // SSD1306_COMSCANDEC
         cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
         // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
@@ -366,7 +367,6 @@ namespace OLED {
         MAX_Y = 63
 
         fill(0)
-        orientation = HORIZONTAL
     }
 
     init();
