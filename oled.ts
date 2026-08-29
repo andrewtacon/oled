@@ -375,7 +375,7 @@ namespace OLED {
         cmd1(0xA6)       // SSD1306_NORMALDISPLAY
         cmd2(0xD6, 0)    // zoom off
         cmd1(0xAF)       // SSD1306_DISPLAYON
-        fill(0)
+        orientHorizontal()
     }
 
     /**
