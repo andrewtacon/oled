@@ -132,20 +132,80 @@ namespace OLED {
     //         pins.i2cWriteBuffer(_I2CAddr, _buf2)
     //     }
     // }
-
     function char(c: string, col: number, row: number, color: number = 1) {
         let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
-        let ind = col + row * 128 + 1
 
+        // Temporarily turn off immediate drawing to avoid severe I2C stuttering during the loop
+        let previousDraw = _DRAW
+        _DRAW = 0
+
+        // Loop through the 5 columns of the 5x7 font
         for (let i = 0; i < 5; i++) {
-            _screen[ind + i] = (color > 0) ? Font_5x7[p + i] : Font_5x7[p + i] ^ 0xFF
-            _buf7[i + 1] = _screen[ind + i]
+            let fontByte = Font_5x7[p + i]
+            
+            // Loop through the 8 vertical bits (rows) of the current font column
+            for (let bit = 0; bit < 8; bit++) {
+                // Determine if this specific pixel is on (1) or off (0)
+                let pixelOn = (fontByte & (1 << bit)) ? 1 : 0
+                
+                // If color = 0 (inverted text), invert the pixel logic
+                let drawColor = (color > 0) ? pixelOn : (pixelOn ^ 1)
+                
+                // Draw the pixel using the adaptive pixel helper
+                pixel(col + i, (row * 8) + bit, drawColor)
+            }
         }
-        _screen[ind + 5] = (color > 0) ? 0 : 0xFF
-        _buf7[6] = _screen[ind + 5]
-        set_pos(col, row)
-        pins.i2cWriteBuffer(_I2CAddr, _buf7)
+
+        // Add 1-pixel empty spacing column between characters
+        let spaceByte = 0x00
+        for (let bit = 0; bit < 8; bit++) {
+            let drawColor = (color > 0) ? 0 : 1
+            pixel(col + 5, (row * 8) + bit, drawColor)
+        }
+
+        // Restore drawing flag state
+        _DRAW = previousDraw
+
+        // If live drawing is enabled, push the updated frame buffer region cleanly 
+        if (_DRAW) {
+            if (orientation === VERTICAL) {
+                // In vertical mode, bound the update zone to this specific character block
+                cmd3(0x21, col, col + 5)
+                cmd3(0x22, row, row)
+                
+                // Send the exact 6 bytes representing the new character column data
+                for (let i = 0; i < 6; i++) {
+                    let pageIndex = row + ((col + i) * 8) + 1
+                    _buf2[0] = 0x40
+                    _buf2[1] = _screen[pageIndex]
+                    pins.i2cWriteBuffer(_I2CAddr, _buf2)
+                }
+            } else {
+                // Traditional horizontal stream block
+                set_pos(col, row)
+                _buf7[0] = 0x40
+                for (let i = 0; i < 6; i++) {
+                    _buf7[i + 1] = _screen[col + row * 128 + 1 + i]
+                }
+                pins.i2cWriteBuffer(_I2CAddr, _buf7)
+            }
+        }
     }
+
+
+    // function char(c: string, col: number, row: number, color: number = 1) {
+    //     let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
+    //     let ind = col + row * 128 + 1
+
+    //     for (let i = 0; i < 5; i++) {
+    //         _screen[ind + i] = (color > 0) ? Font_5x7[p + i] : Font_5x7[p + i] ^ 0xFF
+    //         _buf7[i + 1] = _screen[ind + i]
+    //     }
+    //     _screen[ind + 5] = (color > 0) ? 0 : 0xFF
+    //     _buf7[6] = _screen[ind + 5]
+    //     set_pos(col, row)
+    //     pins.i2cWriteBuffer(_I2CAddr, _buf7)
+    // }
 
     /**
      * show text in OLED
