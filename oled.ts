@@ -120,7 +120,7 @@ namespace OLED {
 
 
 
-    function char(c: string, col: number, row: number, color: number = 1) {
+    function char(c: string, col: number, row: number, color: number = 1, shouldDraw:number=0) {
         let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
 
         if (orientation === HORIZONTAL) {
@@ -155,7 +155,7 @@ namespace OLED {
                 }
             }
 
-            draw(1)
+            draw(shouldDraw)
             // In vertical mode, bound the update zone to this specific character block
             // cmd3(0x21, col, col + 5)
             // cmd3(0x22, row, row)
@@ -185,7 +185,7 @@ namespace OLED {
     //% weight=80 blockGap=8 inlineInputMode=inline
     export function String(s: string, col: number, row: number, color: number = 1) {
         for (let n = 0; n < s.length; n++) {
-            char(s.charAt(n), col, row, color)
+            char(s.charAt(n), col, row, color, n===s.length-1?1:0)
             if (orientation === HORIZONTAL) {
                 col += 6
             } else {
