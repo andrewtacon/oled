@@ -215,7 +215,7 @@ namespace OLED {
     //% weight=71 blockGap=8 inlineInputMode=inline
     export function hline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
         if ((orientation === WEST || orientation === EAST) && !skipCheck) {
-            vline(x, y, len, color, true)
+            vline(y, x, len, color, true)
             return
         }
         let _sav = _DRAW
@@ -239,7 +239,7 @@ namespace OLED {
     //% weight=71 blockGap=8 inlineInputMode=inline
     export function vline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
         if ((orientation === WEST || orientation=== EAST)&& !skipCheck) {
-            hline(x, y, len, color, true)
+            hline(y, x, len, color, true)
             return
         }
 
