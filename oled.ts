@@ -178,14 +178,22 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=80 blockGap=8 inlineInputMode=inline
     export function String(s: string, col: number, row: number, color: number = 1) {
+
+        if (orientation === VERTICAL) {
+            let t = row
+            col = row
+            col = t
+        }
+
         for (let n = 0; n < s.length; n++) {
             char(s.charAt(n), col, row, color)
             if (orientation === HORIZONTAL) {
                 col += 6
+                if (col > (MAX_X - 6)) return
             } else {
                 row += 6
+                if (row > (MAX_Y - 6)) break
             }
-            if (col > (MAX_X - 6)) return
         }
 
         if (orientation === VERTICAL) {
