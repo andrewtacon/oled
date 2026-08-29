@@ -397,7 +397,7 @@ namespace OLED {
                     x++
                     break
                 case "#":
-                    pixel(x, y, inverse)
+                    pixel(x, y, color)
                     x++
                     break
             }
