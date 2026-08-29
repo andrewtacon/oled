@@ -120,7 +120,7 @@ namespace OLED {
 
 
 
-    function char(c: string, col: number, row: number, color: number = 1, shouldDraw:number=0) {
+    function char(c: string, col: number, row: number, color: number = 1) {
         let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
 
         if (orientation === HORIZONTAL) {
@@ -136,7 +136,7 @@ namespace OLED {
             pins.i2cWriteBuffer(_I2CAddr, _buf7)
 
         } else {
-            
+
             // Loop through the 5 columns of the 5x7 font
             for (let i = 0; i < 5; i++) {
                 let fontByte = Font_5x7[p + i]
@@ -151,22 +151,10 @@ namespace OLED {
 
                     // Draw the pixel using the adaptive pixel helper
                     // pixel(col + i, (row * 8) + bit, drawColor)
-                    pixel((col)+bit, (row +i) , drawColor)
+                    pixel((col) + bit, (row + i), drawColor)
                 }
             }
 
-            draw(shouldDraw)
-            // In vertical mode, bound the update zone to this specific character block
-            // cmd3(0x21, col, col + 5)
-            // cmd3(0x22, row, row)
-
-            // // Send the exact 6 bytes representing the new character column data
-            // for (let i = 0; i < 6; i++) {
-            //     let pageIndex = row + ((col + i) * 8) + 1
-            //     _buf2[0] = 0x40
-            //     _buf2[1] = _screen[pageIndex]
-            //     pins.i2cWriteBuffer(_I2CAddr, _buf2)
-            // }
         }
     }
 
@@ -185,14 +173,19 @@ namespace OLED {
     //% weight=80 blockGap=8 inlineInputMode=inline
     export function String(s: string, col: number, row: number, color: number = 1) {
         for (let n = 0; n < s.length; n++) {
-            char(s.charAt(n), col, row, color, n===s.length-1?1:0)
+            char(s.charAt(n), col, row, color)
             if (orientation === HORIZONTAL) {
                 col += 6
             } else {
-                row +=6
+                row += 6
             }
             if (col > (MAX_X - 6)) return
         }
+
+        if (orientation === VERTICAL) {
+            draw(1)
+        }
+
     }
 
     /**
@@ -231,7 +224,7 @@ namespace OLED {
         for (let n = 0; n < s.length; n++) {
             char(s.charAt(n), _cx, _cy, color)
             _cx += 6
-            if (_cx > 120) {
+            if (_cx > MAX_X-6) {
                 scroll()
             }
         }
@@ -395,8 +388,8 @@ namespace OLED {
         // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
         // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         cmd1(0xc0)       // SSD1306_COMSCANDEC
-        MAX_Y = 63
-        MAX_X = 127
+        // MAX_Y = 63
+        // MAX_X = 127
 
         fill(0)
         orientation = VERTICAL
@@ -412,8 +405,8 @@ namespace OLED {
         // cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
         // cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
         cmd1(0xc8)       // SSD1306_COMSCANDEC
-        MAX_X = 127
-        MAX_Y = 63
+        // MAX_X = 127
+        // MAX_Y = 63
 
         fill(0)
         orientation = HORIZONTAL
