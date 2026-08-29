@@ -96,29 +96,13 @@ namespace OLED {
 
         let page = y >> 3
         let shift_page = y % 8
-        let ind = 0
-
-        // Calculate buffer index based on current memory addressing mode
-        // if (orientation === VERTICAL) {
-        //     // ind = page + (x * 8) + 1
-        //     ind = x + (page * 64) + 1
-        // } else {
-            ind = x + (page * 128) + 1
-        // }
+        let ind = x + (page * 128) + 1
 
         let b = (color) ? (_screen[ind] | (1 << shift_page)) : clrbit(_screen[ind], shift_page)
         _screen[ind] = b
 
         if (_DRAW) {
-            // if (orientation === VERTICAL) {
-            //     // In vertical mode, set_pos must target the specific column range 
-            //     // and page range before writing the altered byte
-            //     cmd3(0x21, x, 127)    // Set column start address to current X
-            //     cmd3(0x22, page, 7)   // Set page start address to current page
-            // } else {
-                set_pos(x, page)
-            // }
-
+            set_pos(x, page)
             _buf2[0] = 0x40
             _buf2[1] = b
             pins.i2cWriteBuffer(_I2CAddr, _buf2)
@@ -130,6 +114,8 @@ namespace OLED {
     function char(c: string, col: number, row: number, color: number = 1) {
         let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
 
+        let oldDraw = _DRAW
+        _DRAW= 0
         // Loop through the 5 columns of the 5x7 font
         for (let i = 0; i < 5; i++) {
             let fontByte = Font_5x7[p + i]
@@ -152,6 +138,9 @@ namespace OLED {
             }
 
         }
+
+        _DRAW = oldDraw
+        draw(_DRAW)
     }
 
 
@@ -172,10 +161,6 @@ namespace OLED {
             x += 6
             if (x > (MAX_X - 6)) break
         }
-
-        // if (orientation === VERTICAL) {
-        //     draw(1)
-        // }
 
     }
 
