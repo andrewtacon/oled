@@ -1,5 +1,5 @@
 /**
- * XinaBox OD01 extension for makecode
+ * SSD1306 Extension for Microbit v2
  * Base on OLED Package from microbit/micropython Chinese community.
  *   https://github.com/makecode-extensions/OLED
  */
@@ -476,10 +476,10 @@ namespace OLED {
 
 
     /**
-     * Set display orientation
-     * @param d true: invert / false: normal, eg: true
+     * Set display orientation (0,1,2,3)
      */
     //% blockId="OLED_ORIENT" block="Orient display %d"
+    //% d.defl = 0
     //% weight=62 blockGap=8
     export function orientDisplay(direction: number) {
         direction = Math.round(direction % 4)

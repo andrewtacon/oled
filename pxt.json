@@ -13,7 +13,8 @@
         "main.blocks",
         "main.ts",
         "oled.ts",
-        "i2c.cpp"
+        "i2c.cpp",
+        "controller.ts"
     ],
     "testFiles": [
         "test.ts"
