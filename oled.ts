@@ -361,6 +361,12 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% weight=70 blockGap=8 inlineInputMode=inline
     export function image(image: string, x: number, y: number, scale: number = 1, color: number = 1) {
+
+        let rotate = false
+        if (orientation === WEST || orientation === EAST) {
+            rotate = true
+        }
+
         let start = x
         image = image.trim()
         let inverse = color === 1 ? 0 : 1
@@ -375,7 +381,11 @@ namespace OLED {
                 case ".":
                     for (let k = 0; k < scale; k++) {
                         for (let l = 0; l < scale; l++) {
-                            pixel(x + k, y + l, inverse)
+                            if (rotate) {
+                                pixel(y + k, x + l, inverse)
+                            } else {
+                                pixel(x + k, y + l, inverse)
+                            }
                         }
                     }
                     x += scale
@@ -383,7 +393,11 @@ namespace OLED {
                 case "#":
                     for (let k = 0; k < scale; k++) {
                         for (let l = 0; l < scale; l++) {
-                            pixel(x + k, y + l, color)
+                            if (rotate) {
+                                pixel(y + k, x + l, color)
+                            } else {
+                                pixel(x + k, y + l, color)
+                            }
                         }
                     }
                     x += scale

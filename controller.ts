@@ -1,17 +1,23 @@
+/*
+    This unifies the touchpin and button interfaces under one heading
+    so it is easier to deal with when using them all as
+    external button inputs.
 
+    Would include logo if it was broken out and not locked onto microbit
+*/
 
 namespace controller {
 
 
-    //% block="A"
+    //% block="Control A"
     export const A = TouchPin.P0
-    //% block="B"
+    //% block="Control B"
     export const B = TouchPin.P1
-    //% block="C"   
+    //% block="Control C"   
     export const C = TouchPin.P2
-    //% block="B"
+    //% block="Control B"
     export const D = Button.A
-    //% block="E"
+    //% block="Control E"
     export const E = Button.B
 
     /**
