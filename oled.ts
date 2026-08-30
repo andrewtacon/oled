@@ -99,7 +99,7 @@ namespace OLED {
     /**
      * Plot a pixel
      */
-    //% blockId="OLED_PIXEL" block="set pixel at x %x|y %y|color %color"
+    //% blockId="OLED_PIXEL" block="Plot pixel at x %x|y %y|color %color"
     //% x.max=128 x.min=0 x.defl=0
     //% y.max=64 y.min=0 y.defl=0
     //% color.max=1 color.min=0 color.defl=1
@@ -161,7 +161,7 @@ namespace OLED {
     /**
      * Print text
      */
-    //% blockId="OLED_SHOWSTRING" block="show string %s|at x %col|y %row|color %color"
+    //% blockId="OLED_SHOWSTRING" block="Print text %s|at x %col|y %row|color %color"
     //% s.defl=''
     //% col.max=127 col.min=0 col.defl=0
     //% row.max=127 row.min=0 row.defl=0
@@ -185,7 +185,7 @@ namespace OLED {
     /**
      * Print a number
      */
-    //% blockId="OLED_NUMBER" block="show Number %num|at x %col|y %row|color %color"
+    //% blockId="OLED_NUMBER" block="Print number %num|at x %col|y %row|color %color"
     //% num.defl=0
     //% col.max=127 col.min=0 col.defl=0
     //% row.max=127 row.min=0 row.defl=0
@@ -209,7 +209,7 @@ namespace OLED {
     /**
      * Draw a straight line
      */
-    //% blockId="OLED_LINE" block="draw a line from x1 %x|y1 %y|x2 %x2|y2 %y2|color %color"
+    //% blockId="OLED_LINE" block="Draw a line between x1 %x|y1 %y| and x2 %x2|y2 %y2|color %color"
     //% x1.max=127 x1.min=0 x1.defl=0
     //% y1.max=127 y1.min=0 y1.defl=0
     //% x2.max=127 x2.min=0 x2.defl=0
@@ -267,8 +267,12 @@ namespace OLED {
     /**
      * Draw a rectangle
      */
-    //% blockId="OLED_RECT" block="draw a rectangle at x1 %x1|y1 %y1|x2 %x2|y2 %y2|color %color"
-    //% color.defl=1
+    //% blockId="OLED_RECT" block="Draw a rectangle between x1 %x1|y1 %y1| to x2 %x2|y2 %y2|color %color"
+    //% x1.max=127 x1.min=0 x1.defl=0
+    //% y1.max=127 y1.min=0 y1.defl=0
+    //% x2.max=127 x2.min=0 x2.defl=0
+    //% y2.max=127 y2.min=0 y2.defl=0
+    //% color.max=1 color.min=0 color.defl=1
     //% weight=70 blockGap=8 inlineInputMode=inline
     export function rect(x1: number, y1: number, x2: number, y2: number, color: number = 1) {
         if (x1 > x2)
@@ -288,8 +292,10 @@ namespace OLED {
     /**
      * Draw a circle
      */
-    //% blockId="OLED_CIRCLE" block="draw a circle at x %xc|y %yc|radius %r|color %color"
-    //% color.defl=1
+    //% blockId="OLED_CIRCLE" block="Draw a circle at x %xc|y %yc| with radius %r|color %color"
+    //% x.max=127 x.min=0 x1.defl=0
+    //% y.max=127 y.min=0 y1.defl=0
+    //% color.max=1 color.min=0 color.defl=1
     //% weight=70 blockGap=8 inlineInputMode=inline
     export function circle(xc: number, yc: number, r: number, q1: boolean = true, q2: boolean = true, q3: boolean = true, q4: boolean = true, color: number = 1) {
         let x = 0;
@@ -344,8 +350,11 @@ namespace OLED {
     /**
      * Draw an image
      */
-    //% blockId="OLED_IMAGE" block="Draw image  image %image|x %x|y %y|color %color"
-    //% color.defl=1
+    //% blockId="OLED_IMAGE" block="Draw image %image| at x %x|y %y|scale %scale|color %color"
+    //% x.max=127 x.min=0 x1.defl=0
+    //% y.max=127 y.min=0 y1.defl=0
+    //% scale.min=1 scale.defl=1
+    //% color.max=1 color.min=0 color.defl=1
     //% weight=70 blockGap=8 inlineInputMode=inline
     export function image(image: string, x: number, y: number, scale: number = 1, color: number = 1) {
         let start = x
@@ -402,13 +411,14 @@ namespace OLED {
     /**
      * Fill screen
      */
-    //% blockId="OLED_FILL" block="Fill screen"
+    //% blockId="OLED_FILL" block="Fill screen with color %color"
+    //% color.max=1 color.min=0 color.defl=1
     //% weight=30 blockGap=8
-    export function fill(value: number) {
-        if (value < 0) { value = 0 }
-        else if (value > 255) { value = 255 }
+    export function fill(color: number) {
+        if (color < 0) { color = 0 }
+        else if (color > 255) { color = 255 }
         _cx = _cy = 0
-        _screen.fill(value)
+        _screen.fill(color)
         _screen[0] = 0x40
         draw(1)
     }
