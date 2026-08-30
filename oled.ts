@@ -36,7 +36,9 @@ namespace OLED {
     let _DRAW = 1
     let _cx = 0
     let _cy = 0
-    let orientation = WEST
+
+    let orientation = NORTH
+    let color = 1
 
     function cmd1(d: number) {
         let n = d % 256;
@@ -95,7 +97,7 @@ namespace OLED {
     }
 
     /**
-     * set pixel in OLED
+     * Plot a pixel
      */
     //% blockId="OLED_PIXEL" block="set pixel at x %x|y %y|color %color"
     //% x.max=128 x.min=0 x.defl=0
@@ -157,7 +159,7 @@ namespace OLED {
 
 
     /**
-     * show text in OLED
+     * Print text
      */
     //% blockId="OLED_SHOWSTRING" block="show string %s|at x %col|y %row|color %color"
     //% s.defl=''
@@ -181,7 +183,7 @@ namespace OLED {
     }
 
     /**
-     * show a number in OLED
+     * Print a number
      */
     //% blockId="OLED_NUMBER" block="show Number %num|at x %col|y %row|color %color"
     //% num.defl=0
@@ -205,7 +207,7 @@ namespace OLED {
     }
 
     /**
-     * draw a straight line
+     * Draw a straight line
      */
     //% blockId="OLED_LINE" block="draw a line from x1 %x|y1 %y|x2 %x2|y2 %y2|color %color"
     //% x1.max=127 x1.min=0 x1.defl=0
@@ -214,7 +216,7 @@ namespace OLED {
     //% y2.max=127 y2.min=0 y2.defl=0
     //% color.max=1 color.min=0 color.defl=1
     //% weight=71 blockGap=8 inlineInputMode=inline
-    export function line(x1: number, y1: number, x2: number, y2: number, color: number = 1, skipCheck: boolean = false) {
+    export function line(x1: number, y1: number, x2: number, y2: number, color: number = 1) {
         let _sav = _DRAW
         if ((y1 < MIN_Y) || (y1 > MAX_Y)) return
         if ((y2 < MIN_Y) || (y2 > MAX_Y)) return
@@ -256,8 +258,6 @@ namespace OLED {
             }
         }
 
-
-
         _DRAW = _sav
         draw(_DRAW)
     }
@@ -265,56 +265,7 @@ namespace OLED {
 
 
     /**
-     * draw a horizontal line
-     */
-    //% blockId="OLED_HLINE" block="draw a horizontal line at x %x|y %y|length %len|color %color"
-    //% x.max=127 x.min=0 x.defl=0
-    //% y.max=63 y.min=0 y.defl=0
-    //% len.max=128 len.min=1 len.defl=16
-    //% color.max=1 color.min=0 color.defl=1
-    //% weight=71 blockGap=8 inlineInputMode=inline
-    export function hline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
-        if ((orientation === WEST || orientation === EAST) && !skipCheck) {
-            vline(y, x, len, color, true)
-            return
-        }
-        let _sav = _DRAW
-        if ((y < MIN_Y) || (y > MAX_Y)) return
-        _DRAW = 0
-        for (let i = x; i < (x + len); i++)
-            if ((i >= MIN_X) && (i <= MAX_X))
-                pixel(i, y, color)
-        _DRAW = _sav
-        draw(_DRAW)
-    }
-
-    /**
-     * draw a vertical line
-     */
-    //% blockId="OLED_VLINE" block="draw a vertical line at x %x|y %y|length %len|color %color"
-    //% x.max=127 x.min=0 x.defl=0
-    //% y.max=63 y.min=0 y.defl=0
-    //% len.max=128 len.min=1 len.defl=16
-    //% color.max=1 color.min=0 color.defl=1
-    //% weight=71 blockGap=8 inlineInputMode=inline
-    export function vline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
-        if ((orientation === WEST || orientation === EAST) && !skipCheck) {
-            hline(y, x, len, color, true)
-            return
-        }
-
-        let _sav = _DRAW
-        _DRAW = 0
-        if ((x < MIN_X) || (x > MAX_X)) return
-        for (let i = y; i < (y + len); i++)
-            if ((i >= MIN_Y) && (i <= MAX_Y))
-                pixel(x, i, color)
-        _DRAW = _sav
-        draw(_DRAW)
-    }
-
-    /**
-     * draw a rectangle
+     * Draw a rectangle
      */
     //% blockId="OLED_RECT" block="draw a rectangle at x1 %x1|y1 %y1|x2 %x2|y2 %y2|color %color"
     //% color.defl=1
@@ -325,36 +276,46 @@ namespace OLED {
         if (y1 > y2)
             y1 = [y2, y2 = y1][0];
         _DRAW = 0
-        hline(x1, y1, x2 - x1 + 1, color)
-        hline(x1, y2, x2 - x1 + 1, color)
-        vline(x1, y1, y2 - y1 + 1, color)
-        vline(x2, y1, y2 - y1 + 1, color)
+        line(x1, y1, x1, y2, color)
+        line(x1, y1, x2, y1, color)
+        line(x2, y2, x1, y2, color)
+        line(x2, y2, x2, y1, color)
         _DRAW = 1
         draw(1)
     }
 
 
     /**
-     * draw a circle
+     * Draw a circle
      */
     //% blockId="OLED_CIRCLE" block="draw a circle at x %xc|y %yc|radius %r|color %color"
     //% color.defl=1
     //% weight=70 blockGap=8 inlineInputMode=inline
-    export function circle(xc: number, yc: number, r: number, color: number) {
+    export function circle(xc: number, yc: number, r: number, q1: boolean = true, q2: boolean = true, q3: boolean = true, q4: boolean = true, color: number = 1) {
         let x = 0;
         let y = r;
         let d = 3 - 2 * r;
 
         // Helper function to plot all 8 symmetric points
         function plotSymmetricPoints(xc: number, yc: number, x: number, y: number) {
-            pixel(xc + x, yc + y, color);
-            pixel(xc - x, yc + y, color);
-            pixel(xc + x, yc - y, color);
-            pixel(xc - x, yc - y, color);
-            pixel(xc + y, yc + x, color);
-            pixel(xc - y, yc + x, color);
-            pixel(xc + y, yc - x, color);
-            pixel(xc - y, yc - x, color);
+            if (q1) {
+                pixel(xc + x, yc + y, color);
+                pixel(xc + y, yc + x, color);
+            }
+            if (q2) {
+                pixel(xc - x, yc + y, color);
+                pixel(xc - y, yc + x, color);
+            }
+
+            if (q3) {
+                pixel(xc - x, yc - y, color);
+                pixel(xc - y, yc - x, color);
+            }
+
+            if (q4) {
+                pixel(xc + x, yc - y, color);
+                pixel(xc + y, yc - x, color);
+            }
         }
 
         _DRAW = 0
@@ -381,9 +342,9 @@ namespace OLED {
 
 
     /**
-     * draw a circle
+     * Draw an image
      */
-    //% blockId="OLED_IMAGE" block="draw image  image %image|x %x|y %y|color %color"
+    //% blockId="OLED_IMAGE" block="Draw image  image %image|x %x|y %y|color %color"
     //% color.defl=1
     //% weight=70 blockGap=8 inlineInputMode=inline
     export function image(image: string, x: number, y: number, scale: number = 1, color: number = 1) {
@@ -391,7 +352,7 @@ namespace OLED {
         image = image.trim()
         let inverse = color === 1 ? 0 : 1
 
-        _DRAW=0
+        _DRAW = 0
         for (let i = 0; i < image.length; i++) {
             switch (image[i]) {
                 case "\n":
@@ -425,7 +386,7 @@ namespace OLED {
 
 
     /**
-     * invert display
+     * Invert display
      * @param d true: invert / false: normal, eg: true
      */
     //% blockId="OLED_INVERT" block="Invert display %d"
@@ -435,8 +396,11 @@ namespace OLED {
         cmd1(n)
     }
 
+
+
+
     /**
-     * fill screen
+     * Fill screen
      */
     //% blockId="OLED_FILL" block="Fill screen"
     //% weight=30 blockGap=8
@@ -450,7 +414,7 @@ namespace OLED {
     }
 
     /**
-     * turn on/off screen
+     * Turn on/off screen
      */
     //% blockId="OLED_ON" block="Display %on"
     //% on.defl=1
@@ -463,7 +427,7 @@ namespace OLED {
     /**
      * OLED initialize
      */
-    //% blockId="OLED_init" block="Initial OLED"
+    //% blockId="OLED_INIT" block="Initial OLED"
     //% weight=10 blockGap=8
     export function init() {
 
@@ -492,12 +456,29 @@ namespace OLED {
         orientNorth()
     }
 
+
+
+
+
+
     /**
-     * Change orientation to west
+     * Set display orientation
+     * @param d true: invert / false: normal, eg: true
      */
-    //% blockId="OLED_west" block="OLED West Orientation"
-    //% weight=10 blockGap=8
-    export function orientWest() {
+    //% blockId="OLED_ORIENT" block="Orient display %d"
+    //% weight=62 blockGap=8
+    export function orientDisplay(direction: number) {
+        direction = Math.round(direction % 4)
+        switch (direction) {
+            case 0: orientNorth(); break;
+            case 1: orientEast(); break;
+            case 2: orientSouth(); break;
+            case 3: orientWest(); break;
+        }
+    }
+
+
+    function orientWest() {
         orientation = WEST
         cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
         cmd1(0xc0)       // SSD1306_COMSCANDEC
@@ -508,12 +489,7 @@ namespace OLED {
         fill(0)
     }
 
-    /**
-     * Change orientation to north
-     */
-    //% blockId="OLED_north" block="OLED North Orientation"
-    //% weight=10 blockGap=8
-    export function orientNorth() {
+    function orientNorth() {
         orientation = NORTH
         cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
         cmd1(0xc8)       // SSD1306_COMSCANDEC
@@ -525,13 +501,7 @@ namespace OLED {
         fill(0)
     }
 
-
-    /**
-     * Change orientation to south
-     */
-    //% blockId="OLED_south" block="OLED South Orientation"
-    //% weight=10 blockGap=8
-    export function orientSouth() {
+    function orientSouth() {
         orientation = SOUTH
         cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
         cmd1(0xc0)       // SSD1306_COMSCANDEC
@@ -542,13 +512,7 @@ namespace OLED {
         fill(0)
     }
 
-
-    /**
-     * Change orientation to EAST
-     */
-    //% blockId="OLED_east" block="OLED East Orientation"
-    //% weight=10 blockGap=8
-    export function orientEast() {
+    function orientEast() {
         orientation = EAST
         cmd2(0x20, 0x01) // SSD1306_MEMORYMODE
         cmd1(0xc8)       // SSD1306_COMSCANDEC
@@ -561,4 +525,76 @@ namespace OLED {
 
     init();
 }
+
+
+
+
+// /**
+//  * draw a horizontal line
+//  */
+// //% blockId="OLED_HLINE" block="draw a horizontal line at x %x|y %y|length %len|color %color"
+// //% x.max=127 x.min=0 x.defl=0
+// //% y.max=63 y.min=0 y.defl=0
+// //% len.max=128 len.min=1 len.defl=16
+// //% color.max=1 color.min=0 color.defl=1
+// //% weight=71 blockGap=8 inlineInputMode=inline
+// export function hline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
+//     if ((orientation === WEST || orientation === EAST) && !skipCheck) {
+//         vline(y, x, len, color, true)
+//         return
+//     }
+//     let _sav = _DRAW
+//     if ((y < MIN_Y) || (y > MAX_Y)) return
+//     _DRAW = 0
+//     for (let i = x; i < (x + len); i++)
+//         if ((i >= MIN_X) && (i <= MAX_X))
+//             pixel(i, y, color)
+//     _DRAW = _sav
+//     draw(_DRAW)
+// }
+
+// /**
+//  * draw a vertical line
+//  */
+// //% blockId="OLED_VLINE" block="draw a vertical line at x %x|y %y|length %len|color %color"
+// //% x.max=127 x.min=0 x.defl=0
+// //% y.max=63 y.min=0 y.defl=0
+// //% len.max=128 len.min=1 len.defl=16
+// //% color.max=1 color.min=0 color.defl=1
+// //% weight=71 blockGap=8 inlineInputMode=inline
+// export function vline(x: number, y: number, len: number, color: number = 1, skipCheck: boolean = false) {
+//     if ((orientation === WEST || orientation === EAST) && !skipCheck) {
+//         hline(y, x, len, color, true)
+//         return
+//     }
+
+//     let _sav = _DRAW
+//     _DRAW = 0
+//     if ((x < MIN_X) || (x > MAX_X)) return
+//     for (let i = y; i < (y + len); i++)
+//         if ((i >= MIN_Y) && (i <= MAX_Y))
+//             pixel(x, i, color)
+//     _DRAW = _sav
+//     draw(_DRAW)
+// }
+
+// /**
+//  * draw a rectangle
+//  */
+// //% blockId="OLED_RECT" block="draw a rectangle at x1 %x1|y1 %y1|x2 %x2|y2 %y2|color %color"
+// //% color.defl=1
+// //% weight=70 blockGap=8 inlineInputMode=inline
+// export function rect(x1: number, y1: number, x2: number, y2: number, color: number = 1) {
+//     if (x1 > x2)
+//         x1 = [x2, x2 = x1][0];
+//     if (y1 > y2)
+//         y1 = [y2, y2 = y1][0];
+//     _DRAW = 0
+//     hline(x1, y1, x2 - x1 + 1, color)
+//     hline(x1, y2, x2 - x1 + 1, color)
+//     vline(x1, y1, y2 - y1 + 1, color)
+//     vline(x2, y1, y2 - y1 + 1, color)
+//     _DRAW = 1
+//     draw(1)
+// }
 
