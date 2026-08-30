@@ -1,5 +1,6 @@
 /**
  * SSD1306 Extension for Microbit v2
+ * Includes Unified Controller Namespace
  * Base on OLED Package from microbit/micropython Chinese community.
  *   https://github.com/makecode-extensions/OLED
  */
