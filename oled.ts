@@ -161,10 +161,10 @@ namespace OLED {
     /**
      * Print text
      */
-    //% blockId="OLED_SHOWSTRING" block="Print text %s|at x %col|y %row|color %color"
+    //% blockId="OLED_SHOWSTRING" block="Print text %s|at x %x|y %y|color %color"
     //% s.defl=''
-    //% col.max=127 col.min=0 col.defl=0
-    //% row.max=127 row.min=0 row.defl=0
+    //% x.max=127 x.min=0 x.defl=0
+    //% y.max=127 y.min=0 y.defl=0
     //% color.max=1 color.min=0 color.defl=1
     //% weight=80 blockGap=8 inlineInputMode=inline
     export function String(s: string, x: number, y: number, color: number = 1) {
@@ -185,10 +185,10 @@ namespace OLED {
     /**
      * Print a number
      */
-    //% blockId="OLED_NUMBER" block="Print number %num|at x %col|y %row|color %color"
-    //% num.defl=0
-    //% col.max=127 col.min=0 col.defl=0
-    //% row.max=127 row.min=0 row.defl=0
+    //% blockId="OLED_NUMBER" block="Print number %num|at x %x|y %y|color %color"
+    //% num.defl=0   
+    //% x.max=127 x.min=0 x.defl=0
+    //% y.max=127 y.min=0 y.defl=0
     //% color.max=1 color.min=0 color.defl=1
     //% weight=80 blockGap=8 inlineInputMode=inline
     export function Number(num: number, x: number, y: number, color: number = 1) {
@@ -292,10 +292,14 @@ namespace OLED {
     /**
      * Draw a circle
      */
-    //% blockId="OLED_CIRCLE" block="Draw a circle at x %xc|y %yc| with radius %r|color %color"
-    //% x.max=127 x.min=0 x1.defl=0
-    //% y.max=127 y.min=0 y1.defl=0
+    //% blockId="OLED_CIRCLE" block="Draw a circle at x %xc|y %yc| with radius %r| q1 %t1|q2 %q2|q3 %q3|q4 %q4| color %color"
+    //% xc.max=127 xc.min=0 xc.defl=0
+    //% yc.max=127 yc.min=0 yc.defl=0
     //% color.max=1 color.min=0 color.defl=1
+    //% q1.defl=true
+    //% q2.defl=true
+    //% q3.defl=true
+    //% q4.defl=true
     //% weight=70 blockGap=8 inlineInputMode=inline
     export function circle(xc: number, yc: number, r: number, q1: boolean = true, q2: boolean = true, q3: boolean = true, q4: boolean = true, color: number = 1) {
         let x = 0;
