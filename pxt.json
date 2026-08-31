@@ -14,7 +14,8 @@
         "main.ts",
         "oled.ts",
         "i2c.cpp",
-        "controller.ts"
+        "controller.ts",
+        "sims.d.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -26,5 +27,8 @@
     "preferredEditor": "blocksprj",
     "disablesVariants": [
         "mbdal"
+    ],
+    "simFiles": [
+        "sim/sim.ts"
     ]
 }
