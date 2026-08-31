@@ -1,6 +1,6 @@
 {
     "name": "oled",
-    "version": "0.1.1",
+    "version": "0.1.3",
     "description": "",
     "dependencies": {
         "core": "*",
@@ -14,8 +14,7 @@
         "main.ts",
         "oled.ts",
         "i2c.cpp",
-        "controller.ts",
-        "sims.d.ts"
+        "controller.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -27,8 +26,5 @@
     "preferredEditor": "blocksprj",
     "disablesVariants": [
         "mbdal"
-    ],
-    "simFiles": [
-        "sim/sim.ts"
     ]
 }
