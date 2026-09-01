@@ -83,6 +83,16 @@ namespace States {
             StateUpdates[this.id] = callback
         }
 
+        onUpdateInterval(interval: number, func: () => void) {
+            loops.everyInterval(
+                interval,
+                () => {
+                    if (currentState === this.id) { func() }
+                }
+            )
+
+        }
+
         activate() {
             currentState = this.id
         }
