@@ -79,6 +79,10 @@ namespace States {
             }
         }
 
+        isPressed(source: any) {
+            return controller.isPressed(source)
+        }
+
         onUpdate(callback: () => void) {
             StateUpdates[this.id] = callback
         }
