@@ -4,6 +4,7 @@ export function initStateManager() {
 
     //create the main loop of the program
     basic.forever(() => {
+        
         if (StateUpdates[currentState]) StateUpdates[currentState]()
     })
 
