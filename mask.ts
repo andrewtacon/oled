@@ -1,11 +1,11 @@
 
-//% deprecated=true
-namespace music {
-}
+// //% deprecated=true
+// namespace music {
+// }
 
-//% deprecated=true
-namespace led {
-}
+// //% deprecated=true
+// namespace led {
+// }
 
 //% deprecated=true
 namespace game {
@@ -15,26 +15,26 @@ namespace game {
 namespace images {
 }
 
-//% deprecated=true
-namespace pins {
-}
+// //% deprecated=true
+// namespace pins {
+// }
 
-//% deprecated=true
-namespace serial {
-}
+// //% deprecated=true
+// namespace serial {
+// }
 
-//% deprecated=true
-namespace control {
-}
+// //% deprecated=true
+// namespace control {
+// }
 
-//% deprecated=true
-namespace radio {
-}
+// //% deprecated=true
+// namespace radio {
+// }
 
-//% deprecated=true
-namespace input {
-}
+// //% deprecated=true
+// namespace input {
+// }
 
-//% deprecated=true
-namespace basic {
-}
+// //% deprecated=true
+// namespace basic {
+// }
