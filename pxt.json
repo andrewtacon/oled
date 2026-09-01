@@ -27,5 +27,14 @@
     "preferredEditor": "blocksprj",
     "disablesVariants": [
         "mbdal"
-    ]
+    ],
+    "toolboxFilter": {
+        "namespaces": {
+            "pins": "hidden",
+            "radio": "disabled"
+        },
+        "blocks": {
+            "device_show_leds": "hidden"
+        }
+    }
 }
