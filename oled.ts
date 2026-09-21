@@ -149,7 +149,7 @@ namespace OLED {
                 if (orientation === WEST || orientation === EAST) {
                     for (let x = 0; x < scale; x++) {
                         for (let y = 0; y < scale; y++) {
-                            pixel((row) + bit*scale+y, (col + i*scale+y), drawColor)
+                            pixel((row) + bit*scale+x, (col + i*scale+y), drawColor)
                         }
                     }
                 } else {
