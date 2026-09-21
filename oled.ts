@@ -129,7 +129,7 @@ namespace OLED {
 
 
 
-    function char(c: string, col: number, row: number, color: number = 1) {
+    function char(c: string, col: number, row: number, scale: number = 1, color: number = 1) {
         let p = (Math.min(127, Math.max(c.charCodeAt(0), 32)) - 32) * 5
 
         // Loop through the 5 columns of the 5x7 font
@@ -147,9 +147,19 @@ namespace OLED {
                 // Draw the pixel using the adaptive pixel helper
                 // pixel(col + i, (row * 8) + bit, drawColor)
                 if (orientation === WEST || orientation === EAST) {
-                    pixel((row) + bit, (col + i), drawColor)
+                    for (let x = 0; x < scale; x++) {
+                        for (let y = 0; y < scale; y++) {
+                            pixel((row) + bit*scale+y, (col*scale + i+x), drawColor)
+                            // pixel((row) + bit, (col + i), drawColor)
+                        }
+                    }
                 } else {
-                    pixel((col) + i, (row + bit), drawColor)
+                    for (let x = 0; x < scale; x++) {
+                        for (let y = 0; y < scale; y++) {
+                            pixel((row) + bit*scale+y, (col*scale + i+x), drawColor)
+                        }
+                    }
+                    // pixel((col) + i, (row + bit), drawColor)
                 }
             }
 
@@ -158,24 +168,24 @@ namespace OLED {
     }
 
 
-
     /**
      * Print text
      */
-    //% blockId="OLED_SHOWSTRING" block="Print text %s|at x %x|y %y|color %color"
+    //% blockId="OLED_SHOWSTRING" block="Print text %s|at x %x|y %y|scale %scale|color %color"
     //% s.defl=''
     //% x.max=127 x.min=0 x.defl=0
     //% y.max=127 y.min=0 y.defl=0
+    //% scale.min=1 scale.defl=1
     //% color.max=1 color.min=0 color.defl=1
     //% weight=80 blockGap=8 inlineInputMode=inline
-    export function String(s: string, x: number, y: number, color: number = 1) {
+    export function String(s: string, x: number, y: number, scale: number = 1, color: number = 1) {
         let oldDraw = _DRAW
         _DRAW = 0
 
         for (let n = 0; n < s.length; n++) {
-            char(s.charAt(n), x, y, color)
-            x += 6
-            if (x > (MAX_X - 6)) break
+            char(s.charAt(n), x, y, scale, color)
+            x += 6 * scale
+            if (x > (MAX_X - 6 * scale)) break
         }
 
         _DRAW = oldDraw
@@ -186,14 +196,15 @@ namespace OLED {
     /**
      * Print a number
      */
-    //% blockId="OLED_NUMBER" block="Print number %num|at x %x|y %y|color %color"
+    //% blockId="OLED_NUMBER" block="Print number %num|at x %x|y %y|scale %scale|color %color"
     //% num.defl=0   
     //% x.max=127 x.min=0 x.defl=0
     //% y.max=127 y.min=0 y.defl=0
     //% color.max=1 color.min=0 color.defl=1
+    //% scale.min=1 scale.defl=1
     //% weight=80 blockGap=8 inlineInputMode=inline
-    export function Number(num: number, x: number, y: number, color: number = 1) {
-        String(num.toString(), x, y, color)
+    export function Number(num: number, x: number, y: number,scale:number=1, color: number = 1) {
+        String(num.toString(), x, y, scale, color)
     }
 
     function scroll() {
@@ -433,7 +444,7 @@ namespace OLED {
     //% blockId="OLED_FILL" block="Fill screen with color %color"
     //% color.max=1 color.min=0 color.defl=1
     //% weight=30 blockGap=8
-    export function fill(color: number) {
+    export function fill(color: number = 0) {
         if (color < 0) { color = 0 }
         else if (color > 255) { color = 255 }
         _cx = _cy = 0
