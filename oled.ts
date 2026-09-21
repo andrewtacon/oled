@@ -149,17 +149,16 @@ namespace OLED {
                 if (orientation === WEST || orientation === EAST) {
                     for (let x = 0; x < scale; x++) {
                         for (let y = 0; y < scale; y++) {
-                            pixel((row) + bit*scale+y, (col*scale + i+x), drawColor)
-                            // pixel((row) + bit, (col + i), drawColor)
+                            pixel((row) + bit*scale+y, (col + i*scale+y), drawColor)
                         }
                     }
                 } else {
                     for (let x = 0; x < scale; x++) {
                         for (let y = 0; y < scale; y++) {
-                            pixel((row) + bit*scale+y, (col*scale + i+x), drawColor)
+                            // pixel((row) + bit*scale+y, (col*scale + i+x), drawColor)
+                            pixel((col) + i*scale+x, (row + bit*scale+y), drawColor)
                         }
                     }
-                    // pixel((col) + i, (row + bit), drawColor)
                 }
             }
 
@@ -185,7 +184,7 @@ namespace OLED {
         for (let n = 0; n < s.length; n++) {
             char(s.charAt(n), x, y, scale, color)
             x += 6 * scale
-            if (x > (MAX_X - 6 * scale)) break
+            if (x > (MAX_X - 6*scale)) break
         }
 
         _DRAW = oldDraw
