@@ -409,7 +409,11 @@ namespace OLED {
            
             line(xc - x, yc - y,xc + x, yc - y,color)
             line(xc - x, yc + y,xc + x, yc + y,color)
-           
+      
+            line(xc - y, yc - x,xc + y, yc - x,color)
+            line(xc - y, yc + x,xc + y, yc + x,color)
+      
+
             // pixel(xc + x, yc + y, color);
             // pixel(xc + y, yc + x, color);
 
