@@ -149,14 +149,14 @@ namespace OLED {
                 if (orientation === WEST || orientation === EAST) {
                     for (let x = 0; x < scale; x++) {
                         for (let y = 0; y < scale; y++) {
-                            pixel((row) + bit*scale+x, (col + i*scale+y), drawColor)
+                            pixel((row) + bit * scale + x, (col + i * scale + y), drawColor)
                         }
                     }
                 } else {
                     for (let x = 0; x < scale; x++) {
                         for (let y = 0; y < scale; y++) {
                             // pixel((row) + bit*scale+y, (col*scale + i+x), drawColor)
-                            pixel((col) + i*scale+x, (row + bit*scale+y), drawColor)
+                            pixel((col) + i * scale + x, (row + bit * scale + y), drawColor)
                         }
                     }
                 }
@@ -184,7 +184,7 @@ namespace OLED {
         for (let n = 0; n < s.length; n++) {
             char(s.charAt(n), x, y, scale, color)
             x += 6 * scale
-            if (x > (MAX_X - 6*scale)) break
+            if (x > (MAX_X - 6 * scale)) break
         }
 
         _DRAW = oldDraw
@@ -202,7 +202,7 @@ namespace OLED {
     //% color.max=1 color.min=0 color.defl=1
     //% scale.min=1 scale.defl=1
     //% weight=80 blockGap=8 inlineInputMode=inline
-    export function Number(num: number, x: number, y: number,scale:number=1, color: number = 1) {
+    export function Number(num: number, x: number, y: number, scale: number = 1, color: number = 1) {
         String(num.toString(), x, y, scale, color)
     }
 
@@ -299,6 +299,35 @@ namespace OLED {
         draw(1)
     }
 
+    /**
+     * Draw a filled rectangle
+     */
+    //% blockId="OLED_FILLED_RECT" block="Draw a rectangle between x1 %x1|y1 %y1| to x2 %x2|y2 %y2|color %color"
+    //% x1.max=127 x1.min=0 x1.defl=0
+    //% y1.max=127 y1.min=0 y1.defl=0
+    //% x2.max=127 x2.min=0 x2.defl=0
+    //% y2.max=127 y2.min=0 y2.defl=0
+    //% color.max=1 color.min=0 color.defl=1
+    //% weight=70 blockGap=8 inlineInputMode=inline
+    export function filledRect(x1: number, y1: number, x2: number, y2: number, color: number = 1) {
+        if (x1 > x2)
+            x1 = [x2, x2 = x1][0];
+        if (y1 > y2)
+            y1 = [y2, y2 = y1][0];
+        _DRAW = 0
+
+        for (let yy = y1; yy < y2; yy++) {
+            line(x1, yy, x2, yy, color)
+        }
+        // line(x1, y1, x1, y2, color)
+        // line(x1, y1, x2, y1, color)
+        // line(x2, y2, x1, y2, color)
+        // line(x2, y2, x2, y1, color)
+        _DRAW = 1
+        draw(1)
+    }
+
+
 
     /**
      * Draw a circle
@@ -360,6 +389,63 @@ namespace OLED {
         _DRAW = 1
         draw(1)
     }
+
+
+    /**
+     * Draw a filled circle
+     */
+    //% blockId="OLED_FILLED_CIRCLE" block="Draw a filled circle at x %xc|y %yc| with radius %r| color %color"
+    //% xc.max=127 xc.min=0 xc.defl=0
+    //% yc.max=127 yc.min=0 yc.defl=0
+    //% color.max=1 color.min=0 color.defl=1
+    //% weight=70 blockGap=8 inlineInputMode=inline
+    export function filledCircle(xc: number, yc: number, r: number, color: number = 1) {
+        let x = 0;
+        let y = r;
+        let d = 3 - 2 * r;
+
+        // Helper function to plot all 8 symmetric points
+        function plotLines(xc: number, yc: number, x: number, y: number) {
+           
+            line(xc - x, yc - y,xc + x, yc - y,color)
+            line(xc - x, yc + y,xc + x, yc + y,color)
+           
+            // pixel(xc + x, yc + y, color);
+            // pixel(xc + y, yc + x, color);
+
+            // pixel(xc - x, yc + y, color);
+            // pixel(xc - y, yc + x, color);
+
+            // pixel(xc - x, yc - y, color);
+            // pixel(xc - y, yc - x, color);
+
+            // pixel(xc + x, yc - y, color);
+            // pixel(xc + y, yc - x, color);
+        }
+
+        _DRAW = 0
+        // Plot initial point at the top of the circle
+        plotLines(xc, yc, x, y);
+
+        // Loop through the first octant
+        while (x <= y) {
+            x++;
+
+            if (d < 0) {
+                d = d + 4 * x + 6;
+            } else {
+                y--;
+                d = d + 4 * (x - y) + 10;
+            }
+
+            plotLines(xc, yc, x, y);
+        }
+
+        _DRAW = 1
+        draw(1)
+    }
+
+
 
 
     /**
